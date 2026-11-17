@@ -12,59 +12,59 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="border-t border-slate-200/90 dark:border-white/10 bg-white dark:bg-navy-950/90 py-10 sm:py-12 transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer className="border-t border-[#1e293b] bg-[#0b0f17] py-8">
+      <div className="max-w-[1275px] mx-auto px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Brand & Monogram */}
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-gold-400 to-amber-600 font-heading text-sm font-bold text-navy-950 shadow-md">
+            <div className="flex h-8 w-8 items-center justify-center rounded-[6px] bg-[#f59e0b] text-xs font-semibold text-[#0b0f17]">
               AA
             </div>
             <div>
-              <div className="font-heading text-sm font-bold text-slate-900 dark:text-white">
+              <div className="text-sm font-semibold text-[#f1f5f9]">
                 {personalDetails.name}
               </div>
-              <p className="text-xs text-slate-600 dark:text-slate-400 font-mono">
+              <p className="text-xs text-[#94a3b8]">
                 {personalDetails.headline.split('|')[0].trim()}
               </p>
             </div>
           </div>
 
           {/* Social Links */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
             <a
               href={personalDetails.links.github}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub"
-              className="p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:text-amber-700 dark:hover:text-gold-400 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
+              className="h-8 w-8 rounded-[6px] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-[#f59e0b] hover:border-[#f59e0b] transition-colors duration-200"
             >
-              <Github className="w-4 h-4" />
+              <Github className="w-4 h-4" strokeWidth={1.75} />
             </a>
             <a
               href={personalDetails.links.linkedin}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"
-              className="p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:text-amber-700 dark:hover:text-gold-400 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
+              className="h-8 w-8 rounded-[6px] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-[#f59e0b] hover:border-[#f59e0b] transition-colors duration-200"
             >
-              <Linkedin className="w-4 h-4" />
+              <Linkedin className="w-4 h-4" strokeWidth={1.75} />
             </a>
             <a
               href={personalDetails.links.fiverr}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Fiverr"
-              className="p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:text-amber-700 dark:hover:text-gold-400 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
+              className="h-8 w-8 rounded-[6px] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-[#f59e0b] hover:border-[#f59e0b] transition-colors duration-200"
             >
-              <ExternalLink className="w-4 h-4" />
+              <ExternalLink className="w-4 h-4" strokeWidth={1.75} />
             </a>
             <a
               href={`mailto:${personalDetails.email}`}
               aria-label="Email"
-              className="p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:text-amber-700 dark:hover:text-gold-400 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
+              className="h-8 w-8 rounded-[6px] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-[#f59e0b] hover:border-[#f59e0b] transition-colors duration-200"
             >
-              <Mail className="w-4 h-4" />
+              <Mail className="w-4 h-4" strokeWidth={1.75} />
             </a>
           </div>
 
@@ -73,20 +73,20 @@ export function Footer() {
             onClick={scrollToTop}
             type="button"
             aria-label="Back to top"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-300 dark:border-white/10 bg-white dark:bg-transparent text-xs font-mono text-slate-700 dark:text-slate-300 hover:text-amber-700 dark:hover:text-gold-400 hover:border-amber-400 transition-all shadow-sm"
+            className="inline-flex items-center gap-1.5 h-[36px] px-3 rounded-[6px] border border-[#1e293b] bg-[#0b0f17] text-xs font-semibold text-[#94a3b8] hover:text-[#f59e0b] hover:border-[#f59e0b] transition-colors duration-200"
           >
             <span>Top</span>
-            <ArrowUp className="w-3.5 h-3.5" />
+            <ArrowUp className="w-3.5 h-3.5" strokeWidth={1.75} />
           </button>
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-8 pt-6 border-t border-slate-200/80 dark:border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-slate-600 dark:text-slate-400">
+        <div className="mt-8 pt-6 border-t border-[#1e293b] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#94a3b8]">
           <div>
             &copy; {currentYear} {personalDetails.name}. All rights reserved.
           </div>
-          <div className="flex items-center gap-1">
-            <span>Built with Next.js, TypeScript &amp; Tailwind CSS</span>
+          <div>
+            Built with Next.js &amp; Tailwind CSS
           </div>
         </div>
       </div>

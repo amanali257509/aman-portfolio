@@ -3,7 +3,6 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import {
   Search,
-  FileText,
   Mail,
   Github,
   Linkedin,
@@ -11,14 +10,11 @@ import {
   Layers,
   GraduationCap,
   Sparkles,
-  Sun,
-  Moon,
   ExternalLink,
   X,
   Command,
 } from 'lucide-react'
 import { personalDetails } from '@/data/content'
-import { useTheme } from './theme-provider'
 
 interface CommandItem {
   id: string
@@ -32,7 +28,6 @@ interface CommandItem {
 export function CommandMenu() {
   const [open, setOpen] = useState(false)
   const [search, setSearch] = useState('')
-  const { theme, toggleTheme } = useTheme()
 
   const navigateTo = useCallback((id: string) => {
     setOpen(false)
@@ -100,175 +95,152 @@ export function CommandMenu() {
     },
     {
       id: 'nav-contact',
-      title: 'Contact Me',
-      subtitle: 'Get in touch for roles & projects',
+      title: 'Contact',
+      subtitle: 'Send message or copy direct email',
       category: 'Navigation',
       icon: Mail,
       action: () => navigateTo('contact'),
     },
     {
-      id: 'act-download-cv',
-      title: 'Download CV',
-      subtitle: 'Get Aman_Ali_CV.pdf',
-      category: 'Actions',
-      icon: FileText,
-      action: () => {
-        setOpen(false)
-        window.open('/Aman_Ali_CV.pdf', '_blank')
-      },
-    },
-    {
-      id: 'act-send-email',
-      title: 'Email Aman Ali',
+      id: 'act-email',
+      title: 'Send Email Directly',
       subtitle: personalDetails.email,
       category: 'Actions',
       icon: Mail,
       action: () => {
-        setOpen(false)
         window.location.href = `mailto:${personalDetails.email}`
-      },
-    },
-    {
-      id: 'act-toggle-theme',
-      title: `Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`,
-      subtitle: 'Toggle theme display',
-      category: 'Actions',
-      icon: theme === 'dark' ? Sun : Moon,
-      action: () => {
-        toggleTheme()
+        setOpen(false)
       },
     },
     {
       id: 'soc-github',
       title: 'GitHub Profile',
-      subtitle: 'Explore code repositories',
+      subtitle: 'View repositories and contributions',
       category: 'Social',
       icon: Github,
       action: () => {
+        window.open(personalDetails.links.github, '_blank')
         setOpen(false)
-        window.open(personalDetails.links.github, '_blank', 'noopener,noreferrer')
       },
     },
     {
       id: 'soc-linkedin',
       title: 'LinkedIn Profile',
-      subtitle: 'Connect on professional network',
+      subtitle: 'Connect professionally',
       category: 'Social',
       icon: Linkedin,
       action: () => {
+        window.open(personalDetails.links.linkedin, '_blank')
         setOpen(false)
-        window.open(personalDetails.links.linkedin, '_blank', 'noopener,noreferrer')
       },
     },
     {
       id: 'soc-fiverr',
-      title: 'Fiverr Seller Profile',
-      subtitle: 'View freelance reviews & services',
+      title: 'Fiverr Pro Profile',
+      subtitle: 'Top-rated custom order packages',
       category: 'Social',
       icon: ExternalLink,
       action: () => {
+        window.open(personalDetails.links.fiverr, '_blank')
         setOpen(false)
-        window.open(personalDetails.links.fiverr, '_blank', 'noopener,noreferrer')
       },
     },
   ]
 
-  const filteredItems = items.filter((item) => {
-    const q = search.toLowerCase()
-    return (
-      item.title.toLowerCase().includes(q) ||
-      item.subtitle.toLowerCase().includes(q) ||
-      item.category.toLowerCase().includes(q)
-    )
-  })
+  const filteredItems = items.filter(
+    (item) =>
+      item.title.toLowerCase().includes(search.toLowerCase()) ||
+      item.subtitle.toLowerCase().includes(search.toLowerCase()) ||
+      item.category.toLowerCase().includes(search.toLowerCase())
+  )
 
   return (
     <>
-      {/* Trigger pill */}
       <button
         onClick={() => setOpen(true)}
         type="button"
         aria-label="Open command palette"
-        className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl border border-slate-300 dark:border-white/10 bg-white/90 dark:bg-navy-900/60 backdrop-blur-md text-xs font-mono text-slate-700 dark:text-slate-300 hover:text-amber-600 dark:hover:text-gold-400 hover:border-amber-400/50 transition-all duration-200 shadow-sm"
+        className="hidden md:flex items-center gap-2 h-8 px-3 rounded-[6px] border border-[#1e293b] bg-[#111827] text-xs text-[#94a3b8] hover:text-[#f59e0b] hover:border-[#f59e0b] transition-colors duration-200"
       >
-        <Search className="w-3.5 h-3.5 text-amber-600 dark:text-gold-400" />
+        <Search className="w-3.5 h-3.5" strokeWidth={1.75} />
         <span>Quick search...</span>
-        <kbd className="inline-flex items-center gap-0.5 rounded bg-slate-100 dark:bg-white/10 px-1.5 py-0.5 text-[10px] font-mono text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/5">
+        <kbd className="inline-flex items-center gap-0.5 rounded-[6px] bg-[#0b0f17] px-1.5 py-0.5 text-[10px] text-[#94a3b8] border border-[#1e293b]">
           <Command className="w-2.5 h-2.5" />K
         </kbd>
       </button>
 
-      {/* Modal Dialog */}
       {open && (
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-black/60 dark:bg-black/75 backdrop-blur-sm animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-black/80"
           onClick={() => setOpen(false)}
         >
           <div
-            className="w-full max-w-lg overflow-hidden rounded-2xl border border-slate-200 dark:border-white/15 bg-white dark:bg-navy-900 text-slate-900 dark:text-white shadow-2xl transition-all"
+            className="w-full max-w-lg overflow-hidden rounded-[6px] border border-[#1e293b] bg-[#111827] text-[#f1f5f9] transition-all"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Search Input Bar */}
-            <div className="flex items-center gap-3 border-b border-slate-200 dark:border-white/10 px-4 py-3">
-              <Search className="h-5 w-5 text-amber-600 dark:text-gold-400" />
+            {/* Input Header */}
+            <div className="flex items-center gap-3 border-b border-[#1e293b] px-4 py-3">
+              <Search className="w-4 h-4 text-[#94a3b8]" strokeWidth={1.75} />
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search sections, actions, links..."
+                placeholder="Type a command or jump to section..."
                 autoFocus
-                className="flex-1 bg-transparent text-sm text-slate-900 dark:text-white placeholder-slate-400 outline-none"
+                className="flex-1 bg-transparent text-sm text-[#f1f5f9] placeholder-[#94a3b8]/60 focus:outline-none"
               />
               <button
                 onClick={() => setOpen(false)}
-                className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white"
+                type="button"
+                className="p-1 rounded-[6px] text-[#94a3b8] hover:text-[#f1f5f9] transition-colors"
               >
-                <X className="h-4 w-4" />
+                <X className="w-4 h-4" strokeWidth={1.75} />
               </button>
             </div>
 
-            {/* Results list */}
+            {/* List */}
             <div className="max-h-80 overflow-y-auto p-2">
               {filteredItems.length === 0 ? (
-                <div className="py-8 text-center text-sm text-slate-500 dark:text-slate-400">
-                  No commands found matching &quot;{search}&quot;
+                <div className="py-8 text-center text-xs text-[#94a3b8]">
+                  No matching commands found.
                 </div>
               ) : (
-                <div className="space-y-1">
-                  {filteredItems.map((item) => {
-                    const Icon = item.icon
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={item.action}
-                        className="group flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm transition-colors hover:bg-slate-100 dark:hover:bg-white/10 focus:bg-slate-100 dark:focus:bg-white/10 focus:outline-none"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-300 group-hover:bg-amber-100 dark:group-hover:bg-gold-500/20 group-hover:text-amber-800 dark:group-hover:text-gold-400 transition-colors">
-                            <Icon className="h-4 w-4" />
+                filteredItems.map((item) => {
+                  const Icon = item.icon
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={item.action}
+                      type="button"
+                      className="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-[6px] text-left hover:bg-[#0b0f17] transition-colors group"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="h-8 w-8 rounded-[6px] border border-[#1e293b] bg-[#0b0f17] flex items-center justify-center text-[#94a3b8] group-hover:text-[#f59e0b] group-hover:border-[#f59e0b] shrink-0 transition-colors">
+                          <Icon className="w-4 h-4" strokeWidth={1.75} />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="text-sm font-semibold text-[#f1f5f9] truncate">
+                            {item.title}
                           </div>
-                          <div>
-                            <div className="font-semibold text-slate-900 dark:text-white group-hover:text-amber-700 dark:group-hover:text-gold-300">
-                              {item.title}
-                            </div>
-                            <div className="text-xs text-slate-600 dark:text-slate-400">{item.subtitle}</div>
+                          <div className="text-xs text-[#94a3b8] truncate">
+                            {item.subtitle}
                           </div>
                         </div>
-                        <span className="font-mono text-[10px] text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/10 rounded px-1.5 py-0.5 bg-slate-50 dark:bg-transparent">
-                          {item.category}
-                        </span>
-                      </button>
-                    )
-                  })}
-                </div>
+                      </div>
+                      <span className="text-[10px] text-[#94a3b8] border border-[#1e293b] rounded-[6px] px-1.5 py-0.5 bg-[#0b0f17]">
+                        {item.category}
+                      </span>
+                    </button>
+                  )
+                })
               )}
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-between border-t border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-black/30 px-4 py-2 text-[11px] font-mono text-slate-600 dark:text-slate-400">
-              <span>Aman Ali • Portfolio</span>
+            <div className="flex items-center justify-between border-t border-[#1e293b] bg-[#0b0f17] px-4 py-2 text-[11px] text-[#94a3b8]">
+              <span>Use arrows or mouse to navigate</span>
               <span>ESC to close</span>
             </div>
           </div>

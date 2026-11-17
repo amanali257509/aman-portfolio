@@ -4,9 +4,8 @@ import React from 'react'
 import {
   ExternalLink,
   Github,
-  Layers,
   Bot,
-  CheckCircle2,
+  Check,
 } from 'lucide-react'
 import { getActiveProjects } from '@/data/content'
 
@@ -20,33 +19,30 @@ export function FeaturedWork() {
   }
 
   return (
-    <section id="work" className="py-14 sm:py-20 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="work" className="py-16 md:py-24 border-t border-[#1e293b]">
+      <div className="max-w-[1275px] mx-auto px-6">
         {/* Section Header */}
-        <div className="max-w-2xl mb-10">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-amber-300 bg-amber-50 text-amber-800 dark:border-gold-500/30 dark:bg-gold-500/10 dark:text-gold-400 text-xs font-mono mb-3">
-            <Layers className="w-3.5 h-3.5" />
-            <span>Case Studies &amp; Systems</span>
-          </div>
-          <h2 className="font-heading text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            Featured Work
-          </h2>
-          <p className="mt-2 text-base text-slate-600 dark:text-slate-400 leading-relaxed">
+        <div className="mb-12 space-y-2">
+          <span className="text-xs font-semibold uppercase tracking-wider text-[#f59e0b]">
+            Case Studies
+          </span>
+          <h2 className="text-[#f1f5f9]">Featured Work</h2>
+          <p className="text-[16px] leading-[1.6] text-[#94a3b8] max-w-[65ch]">
             Real systems engineered for production, measured by concrete business impact.
           </p>
         </div>
 
         {/* Project Cards Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {activeProjects.map((project) => (
             <div
               key={project.id}
-              className="group relative rounded-2xl border border-slate-200/90 dark:border-white/10 bg-white/95 dark:bg-navy-900/60 backdrop-blur-md p-6 sm:p-7 flex flex-col justify-between hover:border-amber-400/80 dark:hover:border-gold-500/40 transition-all duration-300 shadow-sm"
+              className="bg-[#111827] border border-[#1e293b] rounded-[6px] p-6 hover:border-[#f59e0b] transition-colors duration-200 flex flex-col justify-between"
             >
               <div>
-                {/* Header: Category & Links */}
+                {/* Header */}
                 <div className="flex items-center justify-between mb-4">
-                  <span className="font-mono text-xs px-2.5 py-1 rounded-md bg-amber-50 text-amber-800 border border-amber-200 dark:bg-gold-500/10 dark:text-gold-400 dark:border-gold-500/20 font-semibold">
+                  <span className="text-xs px-2.5 py-1 rounded-[6px] bg-[#0b0f17] text-[#f59e0b] border border-[#1e293b] font-semibold">
                     {project.category}
                   </span>
                   <div className="flex items-center gap-2">
@@ -56,9 +52,9 @@ export function FeaturedWork() {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label="View source code"
-                        className="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
+                        className="h-8 w-8 rounded-[6px] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-[#f59e0b] hover:border-[#f59e0b] transition-colors duration-200"
                       >
-                        <Github className="w-4 h-4" />
+                        <Github className="w-4 h-4" strokeWidth={1.75} />
                       </a>
                     )}
                     {project.liveUrl && (
@@ -67,51 +63,51 @@ export function FeaturedWork() {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label="View live project"
-                        className="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
+                        className="h-8 w-8 rounded-[6px] border border-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-[#f59e0b] hover:border-[#f59e0b] transition-colors duration-200"
                       >
-                        <ExternalLink className="w-4 h-4" />
+                        <ExternalLink className="w-4 h-4" strokeWidth={1.75} />
                       </a>
                     )}
                   </div>
                 </div>
 
-                <h3 className="font-heading text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-2.5 group-hover:text-amber-600 dark:group-hover:text-gold-300 transition-colors">
+                <h3 className="text-[#f1f5f9] mb-3">
                   {project.title}
                 </h3>
 
-                {/* Problem & Solution */}
-                <div className="space-y-2.5 mb-5 text-sm">
+                {/* Problem & Built */}
+                <div className="space-y-3 mb-6">
                   <div>
-                    <span className="font-mono text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1 font-semibold">
+                    <span className="text-xs uppercase font-semibold text-[#f59e0b] block mb-1">
                       Problem:
                     </span>
-                    <p className="text-slate-700 dark:text-slate-300">{project.problem}</p>
+                    <p className="text-[15px] leading-[1.6] text-[#94a3b8]">{project.problem}</p>
                   </div>
                   <div>
-                    <span className="font-mono text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1 font-semibold">
+                    <span className="text-xs uppercase font-semibold text-[#f59e0b] block mb-1">
                       What I Built:
                     </span>
-                    <p className="text-slate-700 dark:text-slate-300">{project.whatBuilt}</p>
+                    <p className="text-[15px] leading-[1.6] text-[#94a3b8]">{project.whatBuilt}</p>
                   </div>
                 </div>
 
                 {/* Workflow Diagram Card Layout if Automation */}
                 {project.isWorkflow && project.workflowSteps && (
-                  <div className="mb-5 p-3.5 rounded-xl border border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-navy-950/80">
-                    <div className="font-mono text-[11px] text-slate-600 dark:text-slate-400 mb-2 flex items-center gap-1.5 font-semibold">
-                      <Bot className="w-3.5 h-3.5 text-amber-600 dark:text-gold-400" />
+                  <div className="mb-6 p-4 rounded-[6px] border border-[#1e293b] bg-[#0b0f17]">
+                    <div className="text-xs font-semibold text-[#94a3b8] mb-3 flex items-center gap-1.5">
+                      <Bot className="w-4 h-4 text-[#f59e0b]" strokeWidth={1.75} />
                       <span>Automation Node Pipeline:</span>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                       {project.workflowSteps.map((step) => (
                         <div
                           key={step.id}
-                          className="p-2 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 text-center"
+                          className="p-2 rounded-[6px] border border-[#1e293b] bg-[#111827] text-center"
                         >
-                          <span className="block font-mono text-[9px] font-bold text-amber-700 dark:text-gold-400">
+                          <span className="block text-[10px] font-semibold text-[#f59e0b]">
                             {step.badge}
                           </span>
-                          <span className="block text-xs font-semibold text-slate-900 dark:text-white truncate">
+                          <span className="block text-xs font-semibold text-[#f1f5f9] truncate">
                             {step.label}
                           </span>
                         </div>
@@ -120,22 +116,22 @@ export function FeaturedWork() {
                   </div>
                 )}
 
-                {/* Result (Only if real) */}
+                {/* Result */}
                 {project.result && !project.result.includes('[ADD') && (
-                  <div className="mb-5 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-800 dark:text-emerald-400 text-xs font-mono flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                  <div className="mb-6 p-3 rounded-[6px] bg-[#0b0f17] border border-[#1e293b] text-[#f59e0b] text-xs flex items-center gap-2">
+                    <Check className="w-4 h-4 shrink-0 text-[#f59e0b]" strokeWidth={2} />
                     <span>{project.result}</span>
                   </div>
                 )}
               </div>
 
               {/* Technologies */}
-              <div className="pt-3.5 border-t border-slate-200/80 dark:border-white/5 mt-auto">
-                <div className="flex flex-wrap gap-1.5">
+              <div className="pt-4 border-t border-[#1e293b] mt-auto">
+                <div className="flex flex-wrap gap-2">
                   {project.tech.map((t) => (
                     <span
                       key={t}
-                      className="px-2.5 py-1 rounded-md text-xs font-mono bg-slate-100 dark:bg-navy-950 text-slate-800 dark:text-slate-300 border border-slate-200/90 dark:border-white/10"
+                      className="px-2.5 py-1 rounded-[6px] text-xs bg-[#0b0f17] text-[#94a3b8] border border-[#1e293b]"
                     >
                       {t}
                     </span>

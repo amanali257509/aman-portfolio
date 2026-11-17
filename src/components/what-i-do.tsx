@@ -7,7 +7,6 @@ import {
   ShoppingBag,
   TrendingUp,
   Zap,
-  Cpu,
 } from 'lucide-react'
 import { services } from '@/data/content'
 
@@ -21,24 +20,21 @@ const iconMap: Record<string, React.ElementType> = {
 
 export function WhatIDo() {
   return (
-    <section id="services" className="py-14 sm:py-20 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="services" className="py-16 md:py-24 border-t border-[#1e293b]">
+      <div className="max-w-[1275px] mx-auto px-6">
         {/* Section Header */}
-        <div className="max-w-2xl mb-10 sm:mb-12">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-amber-300 bg-amber-50 text-amber-800 dark:border-gold-500/30 dark:bg-gold-500/10 dark:text-gold-400 text-xs font-mono mb-3">
-            <Cpu className="w-3.5 h-3.5" />
-            <span>Core Engineering Disciplines</span>
-          </div>
-          <h2 className="font-heading text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            What I Do
-          </h2>
-          <p className="mt-2 text-base text-slate-600 dark:text-slate-400 leading-relaxed">
+        <div className="mb-12 space-y-2">
+          <span className="text-xs font-semibold uppercase tracking-wider text-[#f59e0b]">
+            Core Disciplines
+          </span>
+          <h2 className="text-[#f1f5f9]">What I Do</h2>
+          <p className="text-[16px] leading-[1.6] text-[#94a3b8] max-w-[65ch]">
             Specialized in bridging advanced AI automation with robust e-commerce architecture and full-stack web platforms.
           </p>
         </div>
 
         {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5 sm:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
           {services.map((service, index) => {
             const Icon = iconMap[service.icon] || Code2
             const isHeroCard = service.highlight
@@ -52,48 +48,38 @@ export function WhatIDo() {
             return (
               <div
                 key={service.id}
-                className={`group relative rounded-2xl border transition-all duration-300 p-6 sm:p-7 flex flex-col justify-between ${colSpan} ${
-                  isHeroCard
-                    ? 'border-amber-300/80 bg-gradient-to-br from-amber-50/70 via-white to-amber-50/30 shadow-md shadow-amber-500/5 dark:border-gold-500/30 dark:bg-gradient-to-br dark:from-navy-900/90 dark:via-navy-950/90 dark:to-navy-900/90 dark:shadow-xl dark:shadow-gold-500/5'
-                    : 'border-slate-200/90 bg-white/90 backdrop-blur-md hover:border-amber-400/80 shadow-sm dark:border-white/10 dark:bg-navy-900/60 dark:hover:border-gold-500/30'
-                }`}
+                className={`bg-[#111827] border border-[#1e293b] rounded-[6px] p-6 hover:border-[#f59e0b] transition-colors duration-200 flex flex-col justify-between ${colSpan}`}
               >
                 <div>
-                  {/* Top Bar: Icon & Step ID */}
-                  <div className="flex items-center justify-between mb-5">
-                    <div
-                      className={`flex h-11 w-11 items-center justify-center rounded-xl ${
-                        isHeroCard
-                          ? 'bg-amber-100 text-amber-800 border border-amber-300 dark:bg-gold-500/20 dark:text-gold-400 dark:border-gold-500/40'
-                          : 'bg-slate-100 text-slate-800 border border-slate-200 dark:bg-white/5 dark:text-slate-300 dark:border-white/10 group-hover:text-amber-700 dark:group-hover:text-gold-400 group-hover:border-amber-400/50'
-                      } transition-colors`}
-                    >
-                      <Icon className="h-5 w-5" />
+                  {/* Top Bar */}
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="h-10 w-10 rounded-[6px] bg-[#0b0f17] border border-[#1e293b] text-[#f59e0b] flex items-center justify-center">
+                      <Icon className="h-5 w-5" strokeWidth={1.75} />
                     </div>
-                    <span className="font-mono text-xs text-slate-500 dark:text-slate-400 uppercase tracking-widest font-semibold">
+                    <span className="text-xs font-semibold text-[#94a3b8]">
                       0{index + 1}
                     </span>
                   </div>
 
                   {/* Title & Description */}
-                  <h3 className="font-heading text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-1.5 group-hover:text-amber-600 dark:group-hover:text-gold-300 transition-colors">
+                  <h3 className="text-[#f1f5f9] mb-1">
                     {service.title}
                   </h3>
-                  <p className="font-semibold text-xs text-amber-700 dark:text-gold-400 mb-2.5">
+                  <div className="text-xs font-semibold text-[#f59e0b] mb-3">
                     {service.shortDescription}
-                  </p>
-                  <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-5">
+                  </div>
+                  <p className="text-[15px] leading-[1.6] text-[#94a3b8] mb-6">
                     {service.description}
                   </p>
                 </div>
 
-                {/* Tags / Technologies */}
-                <div className="pt-3.5 border-t border-slate-200/80 dark:border-white/5 mt-auto">
-                  <div className="flex flex-wrap gap-1.5">
+                {/* Tags */}
+                <div className="pt-4 border-t border-[#1e293b] mt-auto">
+                  <div className="flex flex-wrap gap-2">
                     {service.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-mono bg-slate-100 text-slate-800 border border-slate-200/90 dark:bg-navy-950/80 dark:text-slate-300 dark:border-white/10"
+                        className="inline-flex items-center px-2.5 py-1 rounded-[6px] text-xs font-normal bg-[#0b0f17] text-[#94a3b8] border border-[#1e293b]"
                       >
                         {tag}
                       </span>
