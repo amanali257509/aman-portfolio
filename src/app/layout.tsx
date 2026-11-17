@@ -1,25 +1,26 @@
 import type { Metadata, Viewport } from 'next'
-import { Plus_Jakarta_Sans, Inter, JetBrains_Mono } from 'next/font/google'
+import { Space_Grotesk, DM_Sans, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { JsonLd } from '@/components/json-ld'
 
-const heading = Plus_Jakarta_Sans({
+const headingFont = Space_Grotesk({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
+  weight: ['500', '600', '700'],
   variable: '--font-heading',
   display: 'swap',
 })
 
-const inter = Inter({
+const bodyFont = DM_Sans({
   subsets: ['latin'],
-  variable: '--font-inter',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-sans',
   display: 'swap',
 })
 
-const mono = JetBrains_Mono({
+const monoFont = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-mono',
   display: 'swap',
@@ -102,7 +103,7 @@ export default function RootLayout({
         <JsonLd />
       </head>
       <body
-        className={`${inter.variable} ${heading.variable} ${mono.variable} font-sans antialiased`}
+        className={`${bodyFont.variable} ${headingFont.variable} ${monoFont.variable} font-sans antialiased`}
       >
         <ThemeProvider>
           <a

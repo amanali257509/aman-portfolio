@@ -38,11 +38,17 @@ html {
 }
 
 body {
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   background-color: var(--background);
   color: var(--foreground);
   overflow-x: hidden;
   min-height: 100vh;
   transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: var(--font-heading), system-ui, sans-serif;
+  letter-spacing: -0.025em;
 }
 
 ::selection {
