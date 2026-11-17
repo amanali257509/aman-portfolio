@@ -30,19 +30,23 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'Aman Ali | AI Automation & Full Stack Engineer | E-commerce Lead',
+    default: 'Aman Ali | WordPress & Shopify Expert | AI Automation Specialist',
     template: '%s | Aman Ali',
   },
   description:
-    'Aman Ali is an AI Automation & Full Stack Engineer and E-commerce Technology Lead based in Karachi, Pakistan. 5+ years building autonomous workflows and high-converting e-commerce systems.',
+    'Aman Ali is an expert WordPress & ACF Developer, Shopify (Liquid) Developer, and AI Automation Specialist (n8n, OpenAI) based in Karachi, Pakistan. E-commerce Technology Lead with 5+ years experience building high-converting stores and autonomous workflows.',
   keywords: [
     'Aman Ali',
+    'WordPress Expert',
+    'Shopify Expert',
+    'ACF Developer',
     'AI Automation Engineer',
-    'Full Stack Engineer',
-    'E-commerce Technology Lead',
-    'n8n Specialist',
+    'Pakistan',
     'Shopify Liquid Developer',
-    'Next.js Developer',
+    'WordPress & ACF Expert',
+    'n8n Specialist',
+    'Full Stack Next.js',
+    'E-commerce Technology Lead',
     'Karachi Pakistan Software Engineer',
   ],
   authors: [{ name: 'Aman Ali', url: 'https://github.com/amanali257509' }],
@@ -52,9 +56,9 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: 'Aman Ali | AI Automation & Full Stack Engineer',
+    title: 'Aman Ali | WordPress & Shopify Expert | AI Automation Specialist',
     description:
-      'I build e-commerce systems and AI automations that help brands grow faster. 5+ years experience in Next.js, n8n, and Shopify.',
+      'WordPress & Shopify Expert | AI Automation Specialist (n8n, OpenAI). E-commerce Technology Lead with 5+ years building custom stores, workflows, and Next.js apps.',
     url: siteUrl,
     siteName: 'Aman Ali Portfolio',
     locale: 'en_US',
@@ -62,9 +66,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Aman Ali | AI Automation & Full Stack Engineer',
+    title: 'Aman Ali | WordPress & Shopify Expert | AI Automation Specialist',
     description:
-      'I build e-commerce systems and AI automations that help brands grow faster.',
+      'WordPress & Shopify Expert | AI Automation Specialist (n8n, OpenAI). E-commerce Technology Lead with 5+ years experience.',
   },
   robots: {
     index: true,

@@ -13,8 +13,8 @@ export const personalDetails: PersonalDetails = {
   name: 'Aman Ali',
   location: 'Karachi, Pakistan',
   timezone: 'UTC+5 (PKT)',
-  headline: 'AI Automation & Full Stack Engineer | E-commerce Technology Lead',
-  tagline: 'I build e-commerce systems and AI automations that help brands grow faster.',
+  headline: 'WordPress & Shopify Expert | AI Automation Specialist',
+  tagline: 'E-commerce Technology Lead with 5+ years building high-converting WordPress & Shopify stores, autonomous AI workflows, and modern Next.js web applications.',
   availability: 'Open to remote full-time roles, contracts & freelance projects worldwide',
   yearsOfExperience: '5+',
   email: 'amanali257509@gmail.com',
@@ -27,50 +27,61 @@ export const personalDetails: PersonalDetails = {
 
 export const services: ServiceItem[] = [
   {
-    id: 'ai-automation',
-    title: 'AI Automation & Workflow Engineering',
-    shortDescription: 'Autonomous workflows, API integrations, and custom AI agents.',
+    id: 'wordpress-acf',
+    title: 'WordPress & ACF Development',
+    shortDescription: 'Custom themes, ACF Pro flexible blocks, and WooCommerce architectures.',
     description:
-      'Designing robust autonomous workflows using n8n and Zapier, integrating OpenAI API, webhooks, and REST APIs to eliminate manual work and streamline operations.',
+      'Engineering bespoke WordPress themes and WooCommerce stores from scratch. Deep mastery of Advanced Custom Fields (ACF Pro), custom post types, Gutenberg blocks, and PHP plugin logic for unmatched flexibility.',
+    tags: ['WordPress', 'ACF Pro', 'WooCommerce', 'PHP', 'Custom Themes', 'Gutenberg'],
+    icon: 'Globe',
+    highlight: true,
+  },
+  {
+    id: 'shopify-liquid',
+    title: 'Shopify & Liquid Development',
+    shortDescription: 'High-converting custom Shopify Liquid storefronts & app integrations.',
+    description:
+      'Developing lightweight custom Shopify Liquid themes (Online Store 2.0) with zero app bloat, dynamic AJAX cart drawers, custom sections, and high-conversion checkout flows.',
+    tags: ['Shopify', 'Liquid', 'Theme 2.0', 'Custom Sections', 'Speed Optimization', 'CRO'],
+    icon: 'ShoppingBag',
+    highlight: true,
+  },
+  {
+    id: 'ai-automation',
+    title: 'AI Automation & Workflows',
+    shortDescription: 'Autonomous n8n workflows, OpenAI API agents, and webhooks integration.',
+    description:
+      'Designing robust autonomous workflows using n8n and Zapier, integrating OpenAI API, webhooks, and REST APIs to eliminate manual work and streamline business operations.',
     tags: ['n8n', 'Zapier', 'OpenAI API', 'Webhooks', 'REST APIs', 'Prompt Engineering'],
     icon: 'Bot',
     highlight: true,
   },
   {
+    id: 'webflow-wix',
+    title: 'Webflow & Wix Development',
+    shortDescription: 'Responsive, interactive websites with custom CMS and animations.',
+    description:
+      'Building clean, animated, responsive marketing sites on Webflow and Wix Studio. Implementing custom CMS structures, interactions, custom JavaScript embeds, and client-friendly setups.',
+    tags: ['Webflow', 'Wix Studio', 'Webflow CMS', 'Velo', 'Responsive Design'],
+    icon: 'Layout',
+  },
+  {
     id: 'full-stack',
-    title: 'Full Stack Web Development',
+    title: 'Full Stack Development (Next.js)',
     shortDescription: 'Modern, high-performance web applications built for scale.',
     description:
-      'Engineering performant, responsive web applications using React, Next.js, modern JavaScript, custom backend logic, PHP, and MySQL with rock-solid architecture.',
-    tags: ['Next.js', 'React', 'TypeScript', 'PHP', 'MySQL', 'Tailwind CSS'],
+      'Engineering performant, responsive web applications using React, Next.js App Router, modern TypeScript, custom backend APIs, PHP, and MySQL with rock-solid architecture.',
+    tags: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'PHP', 'MySQL'],
     icon: 'Code2',
   },
   {
-    id: 'ecommerce-cms',
-    title: 'E-commerce & Custom CMS',
-    shortDescription: 'High-converting custom Shopify and WordPress platforms.',
-    description:
-      'Developing custom Shopify Liquid themes and tailored WordPress/WooCommerce solutions. Custom architectures on Webflow, Wix, Squarespace, and GoHighLevel.',
-    tags: ['Shopify', 'Liquid', 'WooCommerce', 'WordPress', 'Webflow', 'Headless'],
-    icon: 'ShoppingBag',
-  },
-  {
     id: 'ecommerce-operations',
-    title: 'E-commerce Operations & Technical SEO',
-    shortDescription: 'Store optimization, performance tuning, and growth marketing.',
+    title: 'E-commerce Operations & SEO',
+    shortDescription: 'Store optimization, Core Web Vitals, and technical SEO.',
     description:
-      'End-to-end store operations: product catalog management, Core Web Vitals optimization, on-page & technical SEO, Meta ads strategy, and influencer collaborations.',
-    tags: ['Technical SEO', 'Performance', 'Meta Ads', 'Conversion Rate', 'Analytics'],
+      'End-to-end store operations: product catalog management, Core Web Vitals optimization, on-page & technical SEO, schema markup, and performance tuning for maximum search visibility.',
+    tags: ['Technical SEO', 'Core Web Vitals', 'Performance', 'Catalog Management', 'Analytics'],
     icon: 'TrendingUp',
-  },
-  {
-    id: 'project-management',
-    title: 'Project Management & AI-Assisted Dev',
-    shortDescription: 'Fast, structured execution using cutting-edge AI dev tools.',
-    description:
-      'Driving agile project delivery and shipping 3x faster by pairing structured engineering workflows with AI-assisted development tools (Cursor, Claude, OpenAI, Gemini).',
-    tags: ['AI-Assisted Dev', 'Cursor', 'Claude', 'Agile', 'Git/GitHub', 'Quality Assurance'],
-    icon: 'Zap',
   },
 ]
 
@@ -158,7 +169,7 @@ export const experiences: ExperienceItem[] = [
   {
     company: "Zyne Ventures & Snug N' Play",
     role: "AI Automation & Full Stack Engineer | E-commerce Technology Lead",
-    period: 'May 2024 – Nov 2026',
+    period: 'May 2024 – Present',
     location: 'Karachi, Pakistan (US Branch collaboration)',
     description:
       "Led technical engineering and e-commerce technology for Zyne Ventures (software company with a US branch) and Snug N' Play (kids' toys e-commerce brand).",
@@ -180,7 +191,7 @@ export const experiences: ExperienceItem[] = [
       'Technical SEO',
       'Cursor',
     ],
-    isCurrent: false,
+    isCurrent: true,
   },
   {
     company: 'Sleek Hive',
@@ -315,7 +326,7 @@ export const metrics: MetricItem[] = [
     isPlaceholder: false, // Verified from real profile
   },
   {
-    label: 'Platforms Mastered',
+    label: 'Technologies',
     value: '10+',
     isPlaceholder: false, // Shopify, WordPress, Next.js, n8n, etc.
   },

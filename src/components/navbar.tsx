@@ -20,8 +20,8 @@ export function Navbar() {
 
   const navLinks = [
     { label: 'What I Do', href: '#services' },
+    { label: 'Projects', href: '#projects' },
     { label: 'Tech Stack', href: '#skills' },
-    ...(hasActiveProjects ? [{ label: 'Work', href: '#work' }] : []),
     { label: 'Experience', href: '#experience' },
     { label: 'Education', href: '#education' },
     { label: 'Contact', href: '#contact' },
@@ -46,7 +46,7 @@ export function Navbar() {
               {personalDetails.name}
             </span>
             <span className="text-xs text-[#94a3b8] leading-tight">
-              AI &amp; Full Stack
+              WordPress &amp; Shopify Expert
             </span>
           </div>
         </Link>

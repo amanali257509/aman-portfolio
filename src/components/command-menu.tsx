@@ -64,10 +64,18 @@ export function CommandMenu() {
     {
       id: 'nav-what-i-do',
       title: 'What I Do',
-      subtitle: 'AI automation, full stack, e-commerce bento',
+      subtitle: 'WordPress, Shopify, AI automation, Webflow',
       category: 'Navigation',
       icon: Layers,
       action: () => navigateTo('services'),
+    },
+    {
+      id: 'nav-projects',
+      title: 'Projects Showcase',
+      subtitle: 'WordPress, Shopify, Webflow, Wix & AI work',
+      category: 'Navigation',
+      icon: Briefcase,
+      action: () => navigateTo('projects'),
     },
     {
       id: 'nav-tech-stack',

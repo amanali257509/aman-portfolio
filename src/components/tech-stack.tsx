@@ -81,7 +81,7 @@ export function TechStack() {
                         {group.category}
                       </h3>
                       <span className="text-xs text-[#94a3b8]">
-                        {group.skills.length} verified technologies
+                        {group.skills.length} technologies
                       </span>
                     </div>
                   </div>

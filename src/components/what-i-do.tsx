@@ -7,6 +7,8 @@ import {
   ShoppingBag,
   TrendingUp,
   Zap,
+  Globe,
+  Layout,
 } from 'lucide-react'
 import { services } from '@/data/content'
 
@@ -16,6 +18,8 @@ const iconMap: Record<string, React.ElementType> = {
   ShoppingBag,
   TrendingUp,
   Zap,
+  Globe,
+  Layout,
 }
 
 export function WhatIDo() {
@@ -29,26 +33,19 @@ export function WhatIDo() {
           </span>
           <h2 className="text-[#f1f5f9]">What I Do</h2>
           <p className="text-[16px] leading-[1.6] text-[#94a3b8] max-w-[65ch]">
-            Specialized in bridging advanced AI automation with robust e-commerce architecture and full-stack web platforms.
+            Specialized in high-converting WordPress &amp; Shopify platforms, autonomous AI workflows, and modern web applications.
           </p>
         </div>
 
         {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service, index) => {
             const Icon = iconMap[service.icon] || Code2
-            const isHeroCard = service.highlight
-            const isFullStack = service.id === 'full-stack'
-            const colSpan = isHeroCard
-              ? 'lg:col-span-7'
-              : isFullStack
-              ? 'lg:col-span-5'
-              : 'lg:col-span-4'
 
             return (
               <div
                 key={service.id}
-                className={`bg-[#111827] border border-[#1e293b] rounded-[6px] p-6 hover:border-[#f59e0b] transition-colors duration-200 flex flex-col justify-between ${colSpan}`}
+                className="bg-[#111827] border border-[#1e293b] rounded-[6px] p-6 hover:border-[#f59e0b] transition-colors duration-200 flex flex-col justify-between"
               >
                 <div>
                   {/* Top Bar */}
