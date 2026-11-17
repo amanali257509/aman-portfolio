@@ -42,39 +42,43 @@ body {
   color: var(--foreground);
   overflow-x: hidden;
   min-height: 100vh;
-  transition: background-color 0.25s ease, color 0.25s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 ::selection {
+  background-color: rgba(245, 183, 77, 0.3);
+  color: #0f172a;
+}
+
+.dark ::selection {
   background-color: rgba(245, 183, 77, 0.25);
   color: #f5b74d;
 }
 
-/* Subtle dot grid pattern */
+/* Dot grid pattern */
 .bg-dot-grid {
-  background-image: radial-gradient(rgba(245, 183, 77, 0.12) 1px, transparent 1px);
-  background-size: 24px 24px;
+  background-image: radial-gradient(rgba(217, 119, 6, 0.12) 1.2px, transparent 1.2px);
+  background-size: 28px 28px;
 }
 
 .dark .bg-dot-grid {
-  background-image: radial-gradient(rgba(245, 183, 77, 0.08) 1px, transparent 1px);
-  background-size: 24px 24px;
+  background-image: radial-gradient(rgba(245, 183, 77, 0.09) 1.2px, transparent 1.2px);
+  background-size: 28px 28px;
 }
 
 /* Glassmorphism utility */
 .glass-panel {
-  background: rgba(11, 20, 38, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-}
-
-.light .glass-panel,
-:not(.dark) .glass-panel {
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.dark .glass-panel {
+  background: rgba(11, 20, 38, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 /* Custom scrollbar */
@@ -83,14 +87,27 @@ body {
 }
 
 ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.dark ::-webkit-scrollbar-track {
   background: #080d1a;
 }
 
 ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
   background: #1e293b;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
+  background: #d97706;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
   background: #f5b74d;
 }

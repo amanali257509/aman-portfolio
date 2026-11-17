@@ -1,59 +1,84 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Webhook, Bot, Database, Send, ArrowRight, Zap, CheckCircle2 } from 'lucide-react'
+import { Webhook, Bot, Database, Send, Zap, CheckCircle2, ArrowRight, ArrowDown } from 'lucide-react'
 
 interface NodeItem {
   id: string
   title: string
-  type: string
+  category: string
+  subtitle: string
   icon: React.ElementType
   status: string
-  color: string
-  textColor: string
-  borderColor: string
+  step: string
+  lightBg: string
+  lightBorder: string
+  lightText: string
+  darkBg: string
+  darkBorder: string
+  darkText: string
 }
 
-const nodes: NodeItem[] = [
+const workflowNodes: NodeItem[] = [
   {
     id: 'trigger',
     title: 'Store Webhook',
-    type: 'TRIGGER',
+    category: 'TRIGGER',
+    subtitle: 'Shopify order.created',
     icon: Webhook,
     status: 'Event Fired',
-    color: 'from-emerald-500/20 to-teal-500/20',
-    textColor: 'text-emerald-400',
-    borderColor: 'border-emerald-500/30',
+    step: '01',
+    lightBg: 'bg-emerald-50 text-emerald-700',
+    lightBorder: 'border-emerald-300/80',
+    lightText: 'text-emerald-700',
+    darkBg: 'dark:bg-emerald-500/15 dark:text-emerald-400',
+    darkBorder: 'dark:border-emerald-500/30',
+    darkText: 'dark:text-emerald-400',
   },
   {
-    id: 'ai-agent',
-    title: 'OpenAI Agent',
-    type: 'INTELLIGENCE',
-    icon: Bot,
-    status: 'Auto-Classify',
-    color: 'from-gold-500/25 to-amber-600/20',
-    textColor: 'text-gold-400',
-    borderColor: 'border-gold-500/40',
-  },
-  {
-    id: 'database',
-    title: 'Custom DB Sync',
-    type: 'ROUTING',
+    id: 'logic',
+    title: 'n8n Router',
+    category: 'ROUTER',
+    subtitle: 'Filter & format payload',
     icon: Database,
-    status: 'Atomic Write',
-    color: 'from-blue-500/20 to-cyan-500/20',
-    textColor: 'text-cyan-400',
-    borderColor: 'border-cyan-500/30',
+    status: 'Normalized',
+    step: '02',
+    lightBg: 'bg-blue-50 text-blue-700',
+    lightBorder: 'border-blue-300/80',
+    lightText: 'text-blue-700',
+    darkBg: 'dark:bg-blue-500/15 dark:text-cyan-400',
+    darkBorder: 'dark:border-cyan-500/30',
+    darkText: 'dark:text-cyan-400',
   },
   {
-    id: 'destination',
-    title: 'Dispatch & Alert',
-    type: 'ACTION',
+    id: 'ai',
+    title: 'OpenAI Agent',
+    category: 'INTELLIGENCE',
+    subtitle: 'Analyze & categorize',
+    icon: Bot,
+    status: 'Processed',
+    step: '03',
+    lightBg: 'bg-amber-50 text-amber-800',
+    lightBorder: 'border-amber-300/80',
+    lightText: 'text-amber-800',
+    darkBg: 'dark:bg-gold-500/20 dark:text-gold-400',
+    darkBorder: 'dark:border-gold-500/40',
+    darkText: 'dark:text-gold-400',
+  },
+  {
+    id: 'action',
+    title: 'Sync & Dispatch',
+    category: 'ACTION',
+    subtitle: 'MySQL DB & Slack alert',
     icon: Send,
     status: 'Completed',
-    color: 'from-purple-500/20 to-pink-500/20',
-    textColor: 'text-purple-400',
-    borderColor: 'border-purple-500/30',
+    step: '04',
+    lightBg: 'bg-purple-50 text-purple-700',
+    lightBorder: 'border-purple-300/80',
+    lightText: 'text-purple-700',
+    darkBg: 'dark:bg-purple-500/15 dark:text-purple-400',
+    darkBorder: 'dark:border-purple-500/30',
+    darkText: 'dark:text-purple-400',
   },
 ]
 
@@ -61,56 +86,42 @@ export function WorkflowNodesVisual() {
   const [activeNode, setActiveNode] = useState<string | null>(null)
 
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 border-slate-200/80 bg-navy-900/60 dark:bg-navy-900/80 backdrop-blur-xl p-6 sm:p-8 shadow-2xl">
-      {/* Background radial glow */}
-      <div className="pointer-events-none absolute -left-20 -top-20 h-64 w-64 rounded-full bg-gold-500/10 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-blue-500/10 blur-3xl" />
+    <div className="relative w-full rounded-2xl border border-slate-200/90 dark:border-white/10 bg-white/90 dark:bg-navy-900/80 backdrop-blur-xl p-5 sm:p-6 shadow-xl dark:shadow-2xl transition-colors">
+      {/* Background ambient lighting */}
+      <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-gold-500/10 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-16 -right-16 h-48 w-48 rounded-full bg-blue-500/10 blur-3xl" />
 
-      {/* Header bar */}
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-white/5 pb-4">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gold-500/10 text-gold-400">
-            <Zap className="h-4 w-4" />
+      {/* Canvas Top Bar */}
+      <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-white/10 pb-3 mb-5">
+        <div className="flex items-center gap-2">
+          {/* macOS window dots */}
+          <div className="flex items-center gap-1.5 mr-2">
+            <span className="h-2.5 w-2.5 rounded-full bg-red-400/80 inline-block" />
+            <span className="h-2.5 w-2.5 rounded-full bg-amber-400/80 inline-block" />
+            <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80 inline-block" />
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-mono text-xs uppercase tracking-wider text-slate-400">
-                Workflow Orchestration
-              </span>
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 font-mono text-[10px] font-medium text-emerald-400">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Live Engine
-              </span>
-            </div>
-            <p className="text-xs text-slate-400 dark:text-slate-400">
-              Autonomous n8n + OpenAI Pipeline
-            </p>
+          <div className="flex items-center gap-2">
+            <Zap className="h-3.5 w-3.5 text-gold-600 dark:text-gold-400" />
+            <span className="font-mono text-[11px] font-semibold text-slate-700 dark:text-slate-300">
+              workflow: ecommerce-ai-pipeline.n8n
+            </span>
           </div>
         </div>
-        <div className="font-mono text-xs text-slate-400">
-          Latency: <span className="text-gold-400 font-medium">180ms</span>
+
+        <div className="flex items-center gap-2">
+          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            Live Engine
+          </span>
+          <span className="hidden sm:inline font-mono text-[10px] text-slate-500 dark:text-slate-400">
+            180ms
+          </span>
         </div>
       </div>
 
-      {/* Desktop / Tablet Flow Layout */}
-      <div className="relative hidden md:grid md:grid-cols-4 md:gap-4 items-center">
-        {/* SVG animated connector lines running across nodes */}
-        <div className="pointer-events-none absolute top-1/2 left-0 w-full -translate-y-1/2 z-0 px-8">
-          <svg className="w-full h-8" preserveAspectRatio="none">
-            <line
-              x1="12%"
-              y1="50%"
-              x2="88%"
-              y2="50%"
-              stroke="rgba(245, 183, 77, 0.2)"
-              strokeWidth="2"
-              strokeDasharray="6 6"
-              className="animate-flow-line"
-            />
-          </svg>
-        </div>
-
-        {nodes.map((node, index) => {
+      {/* Node Grid Layout (2x2 Connected Architecture) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 relative">
+        {workflowNodes.map((node, index) => {
           const Icon = node.icon
           const isHovered = activeNode === node.id
 
@@ -119,91 +130,60 @@ export function WorkflowNodesVisual() {
               key={node.id}
               onMouseEnter={() => setActiveNode(node.id)}
               onMouseLeave={() => setActiveNode(null)}
-              className={`relative z-10 flex flex-col rounded-xl border bg-navy-950/90 p-4 transition-all duration-300 ${
-                node.borderColor
-              } ${
+              className={`relative rounded-xl border p-3.5 sm:p-4 transition-all duration-200 cursor-pointer ${
+                node.lightBorder
+              } ${node.darkBorder} ${
                 isHovered
-                  ? 'scale-105 shadow-lg shadow-gold-500/10 ring-1 ring-gold-500/40'
-                  : 'hover:border-gold-500/40'
+                  ? 'bg-white dark:bg-navy-950 scale-[1.02] shadow-md ring-2 ring-gold-500/40'
+                  : 'bg-slate-50/80 dark:bg-navy-950/70 hover:bg-white dark:hover:bg-navy-950'
               }`}
             >
-              {/* Node status badge */}
-              <div className="flex items-center justify-between mb-3">
-                <span className="font-mono text-[10px] tracking-wider text-slate-400">
-                  {node.type}
+              {/* Node Card Header */}
+              <div className="flex items-center justify-between mb-2.5">
+                <span className="font-mono text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-slate-400">
+                  {node.category} • Step {node.step}
                 </span>
-                <span className={`flex items-center gap-1 font-mono text-[10px] ${node.textColor}`}>
+                <span
+                  className={`inline-flex items-center gap-1 font-mono text-[10px] font-medium ${node.lightText} ${node.darkText}`}
+                >
                   <CheckCircle2 className="w-2.5 h-2.5" />
                   {node.status}
                 </span>
               </div>
 
-              {/* Icon and Title */}
+              {/* Node Body: Icon + Title + Subtitle */}
               <div className="flex items-center gap-3">
                 <div
-                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br ${node.color} ${node.textColor} border ${node.borderColor}`}
+                  className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border ${node.lightBg} ${node.lightBorder} ${node.darkBg} ${node.darkBorder}`}
                 >
-                  <Icon className="h-5 w-5" />
+                  <Icon className="h-4 w-4" />
                 </div>
                 <div className="min-w-0">
-                  <div className="font-heading text-sm font-semibold text-white truncate">
+                  <div className="font-heading text-sm font-bold text-slate-900 dark:text-white truncate">
                     {node.title}
                   </div>
-                  <div className="font-mono text-[11px] text-slate-400">
-                    Step 0{index + 1}
+                  <div className="text-[11px] text-slate-600 dark:text-slate-400 font-sans truncate">
+                    {node.subtitle}
                   </div>
                 </div>
-              </div>
-
-              {/* Connector dot */}
-              {index < nodes.length - 1 && (
-                <div className="absolute -right-3 top-1/2 -translate-y-1/2 z-20 flex h-6 w-6 items-center justify-center rounded-full bg-navy-900 border border-gold-500/40 text-gold-400 shadow-md">
-                  <ArrowRight className="h-3 w-3" />
-                </div>
-              )}
-            </div>
-          )
-        })}
-      </div>
-
-      {/* Mobile Flow Layout (Vertical Stack) */}
-      <div className="flex flex-col gap-3 md:hidden">
-        {nodes.map((node, index) => {
-          const Icon = node.icon
-          return (
-            <div key={node.id} className="relative">
-              <div
-                className={`flex items-center justify-between rounded-xl border bg-navy-950/90 p-3.5 ${node.borderColor}`}
-              >
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br ${node.color} ${node.textColor}`}
-                  >
-                    <Icon className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <div className="font-heading text-sm font-medium text-white">
-                      {node.title}
-                    </div>
-                    <div className="font-mono text-[10px] text-slate-400">
-                      {node.type} • Step 0{index + 1}
-                    </div>
-                  </div>
-                </div>
-                <span className={`font-mono text-xs ${node.textColor} flex items-center gap-1`}>
-                  <CheckCircle2 className="w-3 h-3" />
-                  {node.status}
-                </span>
               </div>
             </div>
           )
         })}
       </div>
 
-      {/* Bottom status note */}
-      <div className="mt-5 flex items-center justify-between text-[11px] font-mono text-slate-400 border-t border-white/5 pt-3">
-        <span>Payload: JSON / REST / Webhook</span>
-        <span className="text-gold-400">Zero-downtime execution</span>
+      {/* Live Stream Terminal Ticker */}
+      <div className="mt-4 pt-3 border-t border-slate-200/70 dark:border-white/5 flex flex-wrap items-center justify-between gap-2 font-mono text-[11px] text-slate-600 dark:text-slate-400">
+        <div className="flex items-center gap-1.5 truncate">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+          <span className="text-slate-500 dark:text-slate-400">&gt;</span>
+          <span className="text-slate-700 dark:text-slate-300 truncate">
+            Payload: JSON • REST • OpenAI • Sync 100%
+          </span>
+        </div>
+        <span className="text-gold-600 dark:text-gold-400 font-semibold shrink-0">
+          Autonomous 24/7
+        </span>
       </div>
     </div>
   )

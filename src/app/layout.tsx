@@ -1,21 +1,21 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, Poppins, JetBrains_Mono } from 'next/font/google'
+import { Plus_Jakarta_Sans, Inter, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { JsonLd } from '@/components/json-ld'
 
-const inter = Inter({
+const heading = Plus_Jakarta_Sans({
   subsets: ['latin'],
-  variable: '--font-inter',
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-heading',
   display: 'swap',
 })
 
-const poppins = Poppins({
-  weight: ['400', '500', '600', '700', '800'],
+const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-poppins',
+  variable: '--font-inter',
   display: 'swap',
 })
 
@@ -25,7 +25,7 @@ const mono = JetBrains_Mono({
   display: 'swap',
 })
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aman-ali.vercel.app'
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aman-ali-dev.vercel.app'
 
 export const viewport: Viewport = {
   themeColor: [
@@ -102,7 +102,7 @@ export default function RootLayout({
         <JsonLd />
       </head>
       <body
-        className={`${inter.variable} ${poppins.variable} ${mono.variable} font-sans antialiased`}
+        className={`${inter.variable} ${heading.variable} ${mono.variable} font-sans antialiased`}
       >
         <ThemeProvider>
           <a
