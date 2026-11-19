@@ -1,114 +1,134 @@
 'use client'
 
-import React, { useState } from 'react'
-import {
-  Send,
-  CheckCircle2,
-  AlertCircle,
-  Copy,
-  Check,
-  Github,
-  Linkedin,
-  ExternalLink,
-  MessageSquare,
-} from 'lucide-react'
-import { personalDetails } from '@/data/content'
+import React, { useState, useEffect } from 'react'
+import { Check, Copy } from 'lucide-react'
+import { profile } from '@/data/profile'
+import { Reveal } from './reveal'
 
 export function Contact() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    service: 'AI Automation & Workflows',
+    topic: 'AI automation and workflows',
     message: '',
-    _gotcha: '',
+    company: '', // Honeypot field
   })
+  const [mountedAt, setMountedAt] = useState<number>(0)
+  const [errors, setErrors] = useState<Record<string, string>>({})
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
-  const [errorMessage, setErrorMessage] = useState('')
+  const [responseMessage, setResponseMessage] = useState('')
   const [copied, setCopied] = useState(false)
 
+  useEffect(() => {
+    setMountedAt(Date.now())
+  }, [])
+
   const copyEmail = () => {
-    navigator.clipboard.writeText(personalDetails.email)
+    navigator.clipboard.writeText(profile.email)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
 
+  const validate = () => {
+    const errs: Record<string, string> = {}
+    if (!formData.name.trim() || formData.name.trim().length < 2) {
+      errs.name = 'Please enter your name (at least 2 characters).'
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!formData.email.trim() || !emailRegex.test(formData.email.trim())) {
+      errs.email = 'Please enter a valid email address.'
+    }
+    if (!formData.message.trim() || formData.message.trim().length < 10) {
+      errs.message = 'Please write a message with at least 10 characters.'
+    } else if (formData.message.length > 2000) {
+      errs.message = 'Message must be under 2000 characters.'
+    }
+    setErrors(errs)
+    return Object.keys(errs).length === 0
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!validate()) return
+
     setStatus('loading')
-    setErrorMessage('')
+    setResponseMessage('')
 
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          mountedAt,
+          submittedAt: Date.now(),
+        }),
       })
 
       const data = await res.json()
 
       if (!res.ok) {
-        throw new Error(data.error || 'Failed to submit form')
+        throw new Error(data.error || 'Failed to send message.')
       }
 
       setStatus('success')
+      setResponseMessage(data.message || 'Thank you! Your message has been sent.')
       setFormData({
         name: '',
         email: '',
-        service: 'AI Automation & Workflows',
+        topic: 'AI automation and workflows',
         message: '',
-        _gotcha: '',
+        company: '',
       })
+      setErrors({})
     } catch (err: unknown) {
       setStatus('error')
-      setErrorMessage(
-        err instanceof Error ? err.message : 'An error occurred. Please try emailing directly.'
+      setResponseMessage(
+        err instanceof Error ? err.message : 'Something went wrong. Please try again or email directly.'
       )
     }
   }
 
   return (
-    <section id="contact" className="py-16 md:py-24 border-t border-[#1e293b]">
-      <div className="max-w-[1275px] mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8">
-          {/* Left Column: Contact info & Channels (5 cols) */}
-          <div className="lg:col-span-5 flex flex-col justify-between">
+    <section id="contact" className="py-20 lg:py-30 border-t border-line" aria-labelledby="contact-title">
+      <div className="max-w-6xl mx-auto px-5 md:px-8 lg:px-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          {/* Left Column (5 cols) */}
+          <Reveal direction="left" className="lg:col-span-5 flex flex-col justify-between">
             <div>
-              {/* Badge */}
-              <div className="inline-flex items-center gap-2 h-8 px-3 rounded-[6px] border border-[#1e293b] bg-[#111827] text-xs font-normal text-[#f59e0b] mb-4">
-                <MessageSquare className="w-3.5 h-3.5" strokeWidth={1.75} />
-                <span>Let&apos;s Build Something</span>
-              </div>
-
-              <h2 className="text-[#f1f5f9] mb-4">
-                Get In Touch
-              </h2>
-
-              <p className="text-[16px] leading-[1.6] text-[#94a3b8] max-w-[65ch] mb-8">
-                Whether you need an autonomous AI workflow, a high-converting Shopify store, or a full-stack Next.js web application, I&apos;m ready to help you ship it.
+              <span className="text-[13px] font-semibold text-brass uppercase tracking-wider block mb-2">
+                Contact
+              </span>
+              <h2 id="contact-title">Get in touch</h2>
+              <p className="mt-3 text-[16px] lg:text-[17px] text-muted max-w-[65ch]">
+                Tell me what you need and I&apos;ll reply by email. Open to remote full-time roles, contracts and freelance projects worldwide.
               </p>
 
-              {/* Direct Email Card with One-Click Copy */}
-              <div className="bg-[#111827] border border-[#1e293b] rounded-[6px] p-6 mb-6 hover:border-[#f59e0b] transition-colors duration-200">
-                <span className="text-xs uppercase tracking-wider text-[#94a3b8] block mb-2 font-semibold">
-                  Direct Email
-                </span>
-                <div className="flex items-center justify-between gap-3">
-                  <a
-                    href={`mailto:${personalDetails.email}`}
-                    className="text-[16px] font-semibold text-[#f1f5f9] hover:text-[#f59e0b] transition-colors duration-200 truncate"
-                  >
-                    {personalDetails.email}
-                  </a>
+              {/* Direct Channels */}
+              <div className="mt-8 space-y-4">
+                {/* Email with copy */}
+                <div className="p-4 rounded-[8px] bg-surface border border-line flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <span className="text-[12px] uppercase tracking-wider text-muted font-medium block">
+                      Email
+                    </span>
+                    <a
+                      href={`mailto:${profile.email}`}
+                      className="text-[15px] font-medium text-ink hover:text-brass transition-colors truncate block mt-0.5"
+                    >
+                      {profile.email}
+                    </a>
+                  </div>
                   <button
-                    onClick={copyEmail}
                     type="button"
+                    onClick={copyEmail}
                     aria-label="Copy email address"
-                    className="shrink-0 inline-flex items-center gap-1.5 h-[36px] px-3 rounded-[6px] text-xs border border-[#1e293b] bg-[#0b0f17] text-[#94a3b8] hover:border-[#f59e0b] hover:text-[#f59e0b] transition-colors duration-200"
+                    className="shrink-0 min-h-[44px] min-w-[44px] px-3 py-2 rounded-[8px] border border-line bg-canvas text-[13px] text-muted hover:text-brass hover:border-brass transition-colors flex items-center gap-1.5"
                   >
                     {copied ? (
                       <>
-                        <Check className="w-3.5 h-3.5 text-[#f59e0b]" strokeWidth={2} />
-                        <span className="text-[#f59e0b] font-semibold">Copied</span>
+                        <Check className="w-3.5 h-3.5 text-brass" strokeWidth={2} />
+                        <span className="text-brass font-medium">Copied</span>
                       </>
                     ) : (
                       <>
@@ -118,178 +138,185 @@ export function Contact() {
                     )}
                   </button>
                 </div>
-              </div>
 
-              {/* Social Channels */}
-              <div className="space-y-3">
-                <span className="text-xs uppercase tracking-wider text-[#94a3b8] block font-semibold">
-                  Professional Channels
-                </span>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {/* Plain Social Links */}
+                <div className="flex flex-wrap items-center gap-5 pt-2 text-[14px]">
                   <a
-                    href={personalDetails.links.linkedin}
+                    href={profile.links.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 h-[44px] px-4 rounded-[6px] border border-[#1e293b] bg-[#111827] text-[#f1f5f9] hover:border-[#f59e0b] hover:text-[#f59e0b] text-xs font-semibold transition-colors duration-200"
+                    className="text-muted hover:text-brass link-underline transition-colors"
                   >
-                    <Linkedin className="w-4 h-4 text-[#f59e0b]" strokeWidth={1.75} />
-                    <span>LinkedIn</span>
+                    LinkedIn
                   </a>
                   <a
-                    href={personalDetails.links.github}
+                    href={profile.links.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 h-[44px] px-4 rounded-[6px] border border-[#1e293b] bg-[#111827] text-[#f1f5f9] hover:border-[#f59e0b] hover:text-[#f59e0b] text-xs font-semibold transition-colors duration-200"
+                    className="text-muted hover:text-brass link-underline transition-colors"
                   >
-                    <Github className="w-4 h-4 text-[#f59e0b]" strokeWidth={1.75} />
-                    <span>GitHub</span>
+                    GitHub
                   </a>
                   <a
-                    href={personalDetails.links.fiverr}
+                    href={profile.links.fiverr}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 h-[44px] px-4 rounded-[6px] border border-[#1e293b] bg-[#111827] text-[#f1f5f9] hover:border-[#f59e0b] hover:text-[#f59e0b] text-xs font-semibold transition-colors duration-200"
+                    className="text-muted hover:text-brass link-underline transition-colors"
                   >
-                    <ExternalLink className="w-4 h-4 text-[#f59e0b]" strokeWidth={1.75} />
-                    <span>Fiverr</span>
+                    Fiverr
                   </a>
                 </div>
+              </div>
+
+              {/* BOOKING CALENDAR WILL GO HERE */}
+              <div className="mt-8 pt-8 border-t border-line text-[13px] text-muted">
+                {/* BOOKING CALENDAR WILL GO HERE */}
+                <span>Based in Karachi, Pakistan (UTC+5). Available for calls across North American and European time zones.</span>
               </div>
             </div>
+          </Reveal>
 
-            {/* Availability Note */}
-            <div className="mt-8 pt-6 border-t border-[#1e293b]">
-              <div className="flex items-center gap-2 text-xs text-[#f59e0b]">
-                <span className="h-2 w-2 rounded-full bg-[#f59e0b]" />
-                <span>{personalDetails.availability}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column: Working Contact Form (7 cols) */}
-          <div className="lg:col-span-7">
-            <div className="bg-[#111827] border border-[#1e293b] rounded-[6px] p-6 space-y-6">
-              <div>
-                <h3 className="text-[#f1f5f9] mb-1">
-                  Send a Message
-                </h3>
-                <p className="text-[14px] text-[#94a3b8]">
-                  Fill out the brief form below and I&apos;ll get back to you within 24 hours.
-                </p>
-              </div>
-
-              {status === 'success' && (
-                <div className="p-4 rounded-[6px] bg-[#0b0f17] border border-[#f59e0b] text-[#f59e0b] flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5 text-[#f59e0b]" strokeWidth={1.75} />
-                  <div>
-                    <div className="font-semibold text-sm">Message Delivered!</div>
-                    <div className="text-xs text-[#94a3b8] mt-1">
-                      Thank you for reaching out. I have received your message and will reply promptly.
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {status === 'error' && (
-                <div className="p-4 rounded-[6px] bg-[#0b0f17] border border-red-500/50 text-red-400 flex items-start gap-3">
-                  <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-red-400" strokeWidth={1.75} />
-                  <div>
-                    <div className="font-semibold text-sm">Delivery Error</div>
-                    <div className="text-xs text-red-300 mt-1">{errorMessage}</div>
-                  </div>
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Honeypot field (hidden from screen & readers) */}
+          {/* Right Column: Contact Form (7 cols) */}
+          <Reveal direction="right" className="lg:col-span-7">
+            <div className="bg-surface border border-line rounded-[8px] p-6 md:p-8">
+              <form onSubmit={handleSubmit} noValidate className="space-y-5">
+                {/* Honeypot field (hidden from screen & bots) */}
                 <input
                   type="text"
-                  name="_gotcha"
-                  value={formData._gotcha}
-                  onChange={(e) => setFormData({ ...formData, _gotcha: e.target.value })}
+                  name="company"
+                  value={formData.company}
+                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                   className="hidden"
                   tabIndex={-1}
                   autoComplete="off"
+                  aria-hidden="true"
                 />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-semibold text-[#94a3b8] mb-2">
-                      Your Name *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Jane Doe"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full h-[44px] px-4 rounded-[6px] border border-[#1e293b] bg-[#0b0f17] text-sm text-[#f1f5f9] placeholder-[#94a3b8]/60 focus:outline-none focus:border-[#f59e0b] transition-colors duration-200"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-[#94a3b8] mb-2">
-                      Your Email *
-                    </label>
-                    <input
-                      type="email"
-                      required
-                      placeholder="jane@company.com"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full h-[44px] px-4 rounded-[6px] border border-[#1e293b] bg-[#0b0f17] text-sm text-[#f1f5f9] placeholder-[#94a3b8]/60 focus:outline-none focus:border-[#f59e0b] transition-colors duration-200"
-                    />
-                  </div>
+                {/* Name */}
+                <div>
+                  <label htmlFor="contact-name" className="block text-[14px] font-normal text-ink mb-2">
+                    Name *
+                  </label>
+                  <input
+                    id="contact-name"
+                    type="text"
+                    required
+                    value={formData.name}
+                    onChange={(e) => {
+                      setFormData({ ...formData, name: e.target.value })
+                      if (errors.name) setErrors({ ...errors, name: '' })
+                    }}
+                    placeholder="Your name"
+                    className="w-full min-h-[44px] px-4 rounded-[8px] border border-line bg-canvas text-[15px] text-ink placeholder:text-muted/60 focus:border-brass transition-colors"
+                    aria-invalid={!!errors.name}
+                    aria-describedby={errors.name ? 'contact-name-error' : undefined}
+                  />
+                  {errors.name && (
+                    <p id="contact-name-error" className="mt-1.5 text-[13px] text-red-400">
+                      {errors.name}
+                    </p>
+                  )}
                 </div>
 
+                {/* Email */}
                 <div>
-                  <label className="block text-xs font-semibold text-[#94a3b8] mb-2">
-                    What can I help you with?
+                  <label htmlFor="contact-email" className="block text-[14px] font-normal text-ink mb-2">
+                    Email *
+                  </label>
+                  <input
+                    id="contact-email"
+                    type="email"
+                    required
+                    value={formData.email}
+                    onChange={(e) => {
+                      setFormData({ ...formData, email: e.target.value })
+                      if (errors.email) setErrors({ ...errors, email: '' })
+                    }}
+                    placeholder="your.email@example.com"
+                    className="w-full min-h-[44px] px-4 rounded-[8px] border border-line bg-canvas text-[15px] text-ink placeholder:text-muted/60 focus:border-brass transition-colors"
+                    aria-invalid={!!errors.email}
+                    aria-describedby={errors.email ? 'contact-email-error' : undefined}
+                  />
+                  {errors.email && (
+                    <p id="contact-email-error" className="mt-1.5 text-[13px] text-red-400">
+                      {errors.email}
+                    </p>
+                  )}
+                </div>
+
+                {/* Help with (Select) */}
+                <div>
+                  <label htmlFor="contact-topic" className="block text-[14px] font-normal text-ink mb-2">
+                    What do you need help with?
                   </label>
                   <select
-                    value={formData.service}
-                    onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                    className="w-full h-[44px] px-4 rounded-[6px] border border-[#1e293b] bg-[#0b0f17] text-sm text-[#f1f5f9] focus:outline-none focus:border-[#f59e0b] transition-colors duration-200"
+                    id="contact-topic"
+                    value={formData.topic}
+                    onChange={(e) => setFormData({ ...formData, topic: e.target.value })}
+                    className="w-full min-h-[44px] px-4 rounded-[8px] border border-line bg-canvas text-[15px] text-ink focus:border-brass transition-colors"
                   >
-                    <option value="AI Automation & Workflows">AI Automation &amp; Workflows (n8n, Zapier, OpenAI)</option>
-                    <option value="Full Stack Web Application">Full Stack Web Application (Next.js, React)</option>
-                    <option value="Custom Shopify or E-commerce">Custom Shopify / Liquid / WooCommerce</option>
-                    <option value="Technical SEO & Store Operations">Technical SEO &amp; Performance Tuning</option>
-                    <option value="Remote Full-time Role / Contract">Remote Full-Time Role or Long-Term Contract</option>
+                    <option value="AI automation and workflows">AI automation and workflows</option>
+                    <option value="Shopify or WooCommerce">Shopify or WooCommerce</option>
+                    <option value="WordPress">WordPress</option>
+                    <option value="Full stack web application">Full stack web application</option>
+                    <option value="Remote role or long-term contract">Remote role or long-term contract</option>
+                    <option value="Something else">Something else</option>
                   </select>
                 </div>
 
+                {/* Message */}
                 <div>
-                  <label className="block text-xs font-semibold text-[#94a3b8] mb-2">
-                    Project Details / Message *
+                  <label htmlFor="contact-message" className="block text-[14px] font-normal text-ink mb-2">
+                    Message *
                   </label>
                   <textarea
+                    id="contact-message"
                     required
                     rows={4}
-                    placeholder="Tell me about your goals, timeline, or current infrastructure..."
                     value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full p-4 rounded-[6px] border border-[#1e293b] bg-[#0b0f17] text-sm text-[#f1f5f9] placeholder-[#94a3b8]/60 focus:outline-none focus:border-[#f59e0b] transition-colors duration-200 resize-y"
+                    onChange={(e) => {
+                      setFormData({ ...formData, message: e.target.value })
+                      if (errors.message) setErrors({ ...errors, message: '' })
+                    }}
+                    placeholder="Tell me about your project, timeline and requirements..."
+                    className="w-full p-4 rounded-[8px] border border-line bg-canvas text-[15px] text-ink placeholder:text-muted/60 focus:border-brass transition-colors resize-y"
+                    aria-invalid={!!errors.message}
+                    aria-describedby={errors.message ? 'contact-message-error' : undefined}
                   />
+                  {errors.message && (
+                    <p id="contact-message-error" className="mt-1.5 text-[13px] text-red-400">
+                      {errors.message}
+                    </p>
+                  )}
                 </div>
 
+                {/* Status Announcement Area for Accessibility */}
+                <div aria-live="polite" className="pt-1">
+                  {status === 'success' && (
+                    <div className="p-4 rounded-[8px] bg-canvas border border-brass text-[14px] text-ink">
+                      <span className="font-semibold text-brass block mb-1">Message sent successfully</span>
+                      <span>{responseMessage}</span>
+                    </div>
+                  )}
+                  {status === 'error' && (
+                    <div className="p-4 rounded-[8px] bg-canvas border border-red-500/40 text-[14px] text-red-300">
+                      <span className="font-semibold block mb-1">Error sending message</span>
+                      <span>{responseMessage}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Submit button */}
                 <button
                   type="submit"
                   disabled={status === 'loading'}
-                  className="w-full h-[44px] px-6 rounded-[6px] text-[15px] font-semibold bg-[#f59e0b] text-[#0b0f17] hover:bg-[#d97706] transition-colors duration-200 inline-flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="btn-primary w-full disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  {status === 'loading' ? (
-                    <span>Sending message...</span>
-                  ) : (
-                    <>
-                      <span>Send Message</span>
-                      <Send className="w-4 h-4" strokeWidth={1.75} />
-                    </>
-                  )}
+                  {status === 'loading' ? 'Sending...' : 'Send message'}
                 </button>
               </form>
             </div>
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>

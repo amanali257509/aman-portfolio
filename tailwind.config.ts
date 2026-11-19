@@ -11,33 +11,35 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        bg: '#0b0f17',
-        surface: '#111827',
-        text: '#f1f5f9',
-        muted: '#94a3b8',
-        border: '#1e293b',
-        accent: {
-          DEFAULT: '#f59e0b',
-          hover: '#d97706',
+        canvas: '#0f1410',
+        surface: {
+          DEFAULT: '#171e18',
+          hover: '#1d261e',
         },
+        line: '#28332a',
+        ink: '#efeadc',
+        muted: '#98a08f',
+        brass: {
+          DEFAULT: '#c9a24d',
+          hover: '#d8b45e',
+        },
+        sage: '#8fae78',
       },
       borderRadius: {
-        DEFAULT: '6px',
-        sm: '6px',
-        md: '6px',
-        lg: '6px',
-        xl: '6px',
-        '2xl': '6px',
-      },
-      maxWidth: {
-        container: '1275px',
+        DEFAULT: '8px',
+        sm: '8px',
+        md: '8px',
+        lg: '8px',
+        xl: '8px',
+        '2xl': '8px',
       },
       fontFamily: {
-        sans: ['var(--font-sans)', 'system-ui', '-apple-system', 'sans-serif'],
-        heading: ['var(--font-heading)', 'var(--font-sans)', 'sans-serif'],
+        heading: ['var(--font-heading)', 'system-ui', 'sans-serif'],
+        body: ['var(--font-body)', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-body)', 'system-ui', 'sans-serif'],
       },
-      spacing: {
-        '18': '4.5rem',
+      maxWidth: {
+        '6xl': '72rem', // 1152px
       },
     },
   },

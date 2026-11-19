@@ -1,40 +1,41 @@
-import { personalDetails } from '@/data/content'
+import { profile } from '@/data/profile'
 
 export function JsonLd() {
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'Person',
-    name: personalDetails.name,
-    jobTitle: personalDetails.headline,
-    description: personalDetails.tagline,
-    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://aman-ali.vercel.app',
-    email: personalDetails.email,
+    name: profile.name,
+    jobTitle: `${profile.title} | ${profile.subtitle}`,
+    description: profile.hero.paragraph,
+    url: 'https://aman-ali.vercel.app',
+    email: profile.email,
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Karachi',
       addressCountry: 'Pakistan',
     },
     sameAs: [
-      personalDetails.links.github,
-      personalDetails.links.linkedin,
-      personalDetails.links.fiverr,
+      profile.links.github,
+      profile.links.linkedin,
+      profile.links.fiverr,
     ],
     knowsAbout: [
-      'WordPress & ACF Pro',
-      'Shopify & Liquid',
+      'WordPress',
+      'Shopify',
+      'Shopify Liquid',
+      'WooCommerce',
       'AI Automation',
       'n8n',
       'Zapier',
       'OpenAI API',
-      'Webflow',
-      'Wix Studio',
       'Next.js',
       'React',
       'TypeScript',
-      'WooCommerce',
-      'E-commerce Operations',
+      'PHP',
+      'MySQL',
+      'Webflow',
+      'Wix',
       'Technical SEO',
-      'API Integration',
     ],
   }
 

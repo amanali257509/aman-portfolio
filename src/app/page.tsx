@@ -1,37 +1,37 @@
 import { Hero } from '@/components/hero'
-import { WhatIDo } from '@/components/what-i-do'
+import { Services } from '@/components/services'
+import { AiShowcase } from '@/components/ai-showcase'
 import { Projects } from '@/components/projects'
-import { TechStack } from '@/components/tech-stack'
+import { Skills } from '@/components/skills'
 import { Experience } from '@/components/experience'
 import { Education } from '@/components/education'
-import { Testimonials } from '@/components/testimonials'
 import { Contact } from '@/components/contact'
 
 export default function Home() {
   return (
     <>
-      {/* 1. Hero with Prominent Badges */}
+      {/* 1. Hero */}
       <Hero />
 
-      {/* 2. What I Do (WordPress, Shopify, AI Automation, Webflow, Full Stack, SEO) */}
-      <WhatIDo />
+      {/* 2. Services */}
+      <Services />
 
-      {/* 3. Projects Showcase with Category Filter Tabs */}
+      {/* 3. AI Automation Showcase */}
+      <AiShowcase />
+
+      {/* 4. All Projects */}
       <Projects />
 
-      {/* 4. Tech Stack */}
-      <TechStack />
+      {/* 5. Skills */}
+      <Skills />
 
-      {/* 5. Experience Timeline */}
+      {/* 6. Experience */}
       <Experience />
 
-      {/* 6. Education */}
+      {/* 7. Education */}
       <Education />
 
-      {/* 7. Testimonials (Auto-hidden if empty) */}
-      <Testimonials />
-
-      {/* 8. Contact Form & Direct Channels */}
+      {/* 8. Contact */}
       <Contact />
     </>
   )
