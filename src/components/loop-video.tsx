@@ -34,7 +34,7 @@ export function LoopVideo({
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             videoEl.play().catch(() => {
-              // Autoplay policy or video not ready
+              // Browser autoplay policy catch
             })
           } else {
             videoEl.pause()
@@ -54,18 +54,19 @@ export function LoopVideo({
   }, [])
 
   if (hasError) {
-    return <MediaPlaceholder label={`${title} (Video placeholder)`} aspectRatio={aspectRatio} className={className} />
+    return <MediaPlaceholder label={`${title} (Video)`} aspectRatio={aspectRatio} className={className} />
   }
 
   return (
     <div className={`relative w-full ${aspectRatio} rounded-[8px] overflow-hidden bg-surface border border-line ${className}`}>
       <video
         ref={videoRef}
+        src={src}
         muted
         loop
         playsInline
         preload="metadata"
-        poster={poster}
+        poster={poster || undefined}
         autoPlay={!reducedMotion}
         onError={() => setHasError(true)}
         aria-label={title}
