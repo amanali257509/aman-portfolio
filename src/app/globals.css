@@ -192,83 +192,36 @@ p {
   transform: translate(0, 0);
 }
 
-/* AI Showcase 3D perspective and cards */
-.ai-perspective {
-  perspective: 1400px;
-}
-
-@media (min-width: 1024px) {
-  .ai-showcase-left {
-    --init-tx: -80px;
-    transform: translateX(var(--tx, -80px)) rotateY(18deg) rotateZ(-4deg) scale(0.92) translateY(24px);
-    opacity: var(--op, 0);
-    border: 1px solid var(--line);
-    transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1), opacity 700ms cubic-bezier(0.22, 1, 0.36, 1), border-color 200ms ease;
+/* Lightbox Modal Animation */
+@keyframes lightboxFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
   }
-  .ai-showcase-left.is-revealed {
-    --tx: 0px;
-    --op: 0.9;
-  }
-  @media (hover: hover) and (pointer: fine) {
-    .ai-showcase-left.is-revealed:hover {
-      transform: translateX(0px) rotateY(0deg) rotateZ(0deg) scale(1) translateY(0px);
-      opacity: 1;
-      border-color: var(--brass);
-      transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1), opacity 400ms cubic-bezier(0.22, 1, 0.36, 1), border-color 200ms ease;
-    }
-  }
-
-  .ai-showcase-right {
-    --init-tx: 80px;
-    transform: translateX(var(--tx, 80px)) rotateY(-18deg) rotateZ(4deg) scale(0.92) translateY(24px);
-    opacity: var(--op, 0);
-    border: 1px solid var(--line);
-    transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1), opacity 700ms cubic-bezier(0.22, 1, 0.36, 1), border-color 200ms ease;
-  }
-  .ai-showcase-right.is-revealed {
-    --tx: 0px;
-    --op: 0.9;
-  }
-  @media (hover: hover) and (pointer: fine) {
-    .ai-showcase-right.is-revealed:hover {
-      transform: translateX(0px) rotateY(0deg) rotateZ(0deg) scale(1) translateY(0px);
-      opacity: 1;
-      border-color: var(--brass);
-      transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1), opacity 400ms cubic-bezier(0.22, 1, 0.36, 1), border-color 200ms ease;
-    }
-  }
-
-  .ai-showcase-center {
-    transform: translateY(var(--ty, 40px)) scale(var(--sc, 0.96));
-    opacity: var(--op, 0);
-    border: 1px solid var(--brass);
-    z-index: 10;
-    transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1) 120ms, opacity 700ms cubic-bezier(0.22, 1, 0.36, 1) 120ms;
-  }
-  .ai-showcase-center.is-revealed {
-    --ty: 0px;
-    --sc: 1.04;
-    --op: 1;
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
-@media (max-width: 1023px) {
-  .ai-showcase-left,
-  .ai-showcase-center,
-  .ai-showcase-right {
-    transform: translateY(var(--ty, 48px));
-    opacity: var(--op, 0);
-    border: 1px solid var(--line);
-    transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1), opacity 700ms cubic-bezier(0.22, 1, 0.36, 1);
+.lightbox-animate-in {
+  animation: lightboxFadeIn 200ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Crisp Video Rendering - eliminates 3D compositing blur */
+.video-crisp {
+  image-rendering: -webkit-optimize-contrast;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Carousel Progress Bar Animation */
+@keyframes progressTimer {
+  from {
+    width: 0%;
   }
-  .ai-showcase-center {
-    border-color: var(--brass);
-  }
-  .ai-showcase-left.is-revealed,
-  .ai-showcase-center.is-revealed,
-  .ai-showcase-right.is-revealed {
-    --ty: 0px;
-    --op: 1;
+  to {
+    width: 100%;
   }
 }
 
@@ -307,10 +260,7 @@ p {
     transform: none !important;
     opacity: 1 !important;
   }
-  .reveal-init,
-  .ai-showcase-left,
-  .ai-showcase-center,
-  .ai-showcase-right {
+  .reveal-init {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
