@@ -16,11 +16,12 @@ export function Hero() {
   return (
     <section
       id="hero"
+      style={{ backgroundColor: '#0f1410' }}
       className="relative isolate overflow-hidden bg-canvas text-ink min-h-[100svh] flex items-center"
       aria-label="Introduction"
     >
       {/* Background Fluid Smoke Simulation (WebGL2 Canvas at z-0, pointer-events-none) */}
-      <FluidBackground colors={['#c7a34d', '#e6c77a', '#8f6b2a']} />
+      <FluidBackground />
 
       {/* Hero Content (z-10 above the fluid canvas) */}
       <div className="relative z-10 w-full max-w-6xl mx-auto px-5 md:px-8 lg:px-12 py-24 md:py-28 lg:py-32">

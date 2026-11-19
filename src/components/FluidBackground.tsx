@@ -8,29 +8,34 @@ interface FluidBackgroundProps {
   className?: string
 }
 
+const DEFAULT_SMOKE_COLORS = ['#c7a34d', '#e6c77a', '#d4af37', '#8f6b2a']
+
 /**
  * Absolute-positioned canvas running WebGL2 Navier-Stokes fluid simulation.
- * Must sit behind hero content (z-0 / pointer-events-none), with content above it on z-10.
+ * Sits behind hero content (z-0 / pointer-events-none), with content above it on z-10.
  */
 export default function FluidBackground({
-  colors = ['#c7a34d', '#e6c77a', '#8f6b2a'],
+  colors = DEFAULT_SMOKE_COLORS,
   className = '',
 }: FluidBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
-    if (!canvasRef.current) return
-    const cleanup = initFluid(canvasRef.current, { colors })
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const cleanup = initFluid(canvas, { colors })
     return () => {
       if (cleanup) cleanup()
     }
-  }, [colors])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // Empty deps so it runs once on mount and doesn't re-trigger WebGL teardown
 
   return (
     <canvas
       ref={canvasRef}
       aria-hidden="true"
-      className={`absolute inset-0 h-full w-full pointer-events-none select-none ${className}`}
+      style={{ backgroundColor: 'transparent' }}
+      className={`absolute inset-0 h-full w-full pointer-events-none select-none z-0 ${className}`}
     />
   )
 }
