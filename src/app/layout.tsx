@@ -4,6 +4,7 @@ import './globals.css'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { JsonLd } from '@/components/json-ld'
+import FluidBackground from '@/components/FluidBackground'
 
 const urbanist = Urbanist({
   subsets: ['latin'],
@@ -81,7 +82,9 @@ export default function RootLayout({
       <head>
         <JsonLd />
       </head>
-      <body className={`${urbanist.variable} ${poppins.variable} font-sans antialiased bg-canvas text-ink`}>
+      <body className={`${urbanist.variable} ${poppins.variable} font-sans antialiased bg-canvas text-ink relative min-h-screen`}>
+        {/* Global WebGL2 Fluid Smoke Background */}
+        <FluidBackground />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-5 focus:py-3 focus:bg-brass focus:text-canvas focus:font-semibold focus:rounded-[8px] focus:outline-none"
@@ -89,7 +92,7 @@ export default function RootLayout({
           Skip to main content
         </a>
         <Header />
-        <main id="main-content" className="overflow-x-clip">
+        <main id="main-content" className="relative z-10 overflow-x-clip">
           {children}
         </main>
         <Footer />

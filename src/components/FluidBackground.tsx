@@ -11,8 +11,9 @@ interface FluidBackgroundProps {
 const DEFAULT_SMOKE_COLORS = ['#c7a34d', '#e6c77a', '#d4af37', '#8f6b2a']
 
 /**
- * Absolute-positioned canvas running WebGL2 Navier-Stokes fluid simulation.
- * Sits behind hero content (z-0 / pointer-events-none), with content above it on z-10.
+ * Fixed-positioned canvas running WebGL2 Navier-Stokes fluid simulation.
+ * Sits globally behind all page content (fixed inset-0, z-0, pointer-events-none),
+ * smoothly following the cursor across the entire page body.
  */
 export default function FluidBackground({
   colors = DEFAULT_SMOKE_COLORS,
@@ -35,7 +36,7 @@ export default function FluidBackground({
       ref={canvasRef}
       aria-hidden="true"
       style={{ backgroundColor: 'transparent' }}
-      className={`absolute inset-0 h-full w-full pointer-events-none select-none z-0 ${className}`}
+      className={`fixed inset-0 w-full h-full pointer-events-none select-none z-0 ${className}`}
     />
   )
 }

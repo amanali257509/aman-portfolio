@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react'
 import { ArrowRight, Download } from 'lucide-react'
 import { profile } from '@/data/profile'
-import FluidBackground from './FluidBackground'
 import TiltPhoto from './TiltPhoto'
 
 export function Hero() {
@@ -16,14 +15,10 @@ export function Hero() {
   return (
     <section
       id="hero"
-      style={{ backgroundColor: '#0f1410' }}
-      className="relative isolate overflow-hidden bg-canvas text-ink min-h-[100svh] flex items-center"
+      className="relative isolate overflow-hidden bg-transparent text-ink min-h-[100svh] flex items-center"
       aria-label="Introduction"
     >
-      {/* Background Fluid Smoke Simulation (WebGL2 Canvas at z-0, pointer-events-none) */}
-      <FluidBackground />
-
-      {/* Hero Content (z-10 above the fluid canvas) */}
+      {/* Hero Content */}
       <div className="relative z-10 w-full max-w-6xl mx-auto px-5 md:px-8 lg:px-12 py-24 md:py-28 lg:py-32">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           {/* Left Column: Existing Hero Text */}

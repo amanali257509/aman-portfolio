@@ -405,13 +405,15 @@ export function initFluid(canvas, options = {}) {
 
   const onMove = (e) => {
     const r = canvas.getBoundingClientRect()
-    // Check if pointer is anywhere within the canvas/hero bounds
+    const width = r.width || window.innerWidth || 1
+    const height = r.height || window.innerHeight || 1
+
     if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) {
       ptr.has = false
       return
     }
-    const x = (e.clientX - r.left) / r.width
-    const y = 1 - (e.clientY - r.top) / r.height
+    const x = (e.clientX - r.left) / width
+    const y = 1 - (e.clientY - r.top) / height
 
     if (!ptr.has) {
       ptr.lastX = x
@@ -430,7 +432,13 @@ export function initFluid(canvas, options = {}) {
     ptr.moved = true
   }
 
+  const onLeave = () => {
+    ptr.has = false
+  }
+
   window.addEventListener('pointermove', onMove, { passive: true })
+  window.addEventListener('resize', resize, { passive: true })
+  document.addEventListener('mouseleave', onLeave, { passive: true })
 
   // Splat a few soft smoke bursts on load so the effect is immediately visible
   for (let i = 0; i < 5; i++) {
@@ -496,6 +504,8 @@ export function initFluid(canvas, options = {}) {
   return () => {
     cancelAnimationFrame(raf)
     window.removeEventListener('pointermove', onMove)
+    window.removeEventListener('resize', resize)
+    document.removeEventListener('mouseleave', onLeave)
     io && io.disconnect()
   }
 }

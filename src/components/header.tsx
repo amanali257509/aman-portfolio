@@ -73,7 +73,7 @@ export function Header() {
       />
 
       <header
-        className={`sticky top-0 left-0 right-0 z-40 bg-canvas/90 transition-colors duration-200 ${
+        className={`sticky top-0 left-0 right-0 z-40 bg-canvas/90 backdrop-blur-md transition-colors duration-200 ${
           scrolled ? 'border-b border-line' : 'border-b border-transparent'
         }`}
       >

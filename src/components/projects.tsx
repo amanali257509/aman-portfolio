@@ -315,7 +315,7 @@ export function Projects() {
     <section
       ref={sectionRef}
       id="projects"
-      className="py-20 lg:py-28 border-t border-line bg-canvas text-ink overflow-hidden"
+      className="py-20 lg:py-28 border-t border-line bg-transparent text-ink overflow-hidden"
       aria-labelledby="projects-title"
     >
       <div className="max-w-6xl mx-auto px-5 md:px-8 lg:px-12">
