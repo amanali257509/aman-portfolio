@@ -246,6 +246,75 @@ p {
   animation: brassShimmer 4s ease infinite;
 }
 
+/* Projects Column Infinite Auto-Scroll */
+@keyframes projectScrollUp {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, -50%, 0);
+  }
+}
+
+@keyframes projectScrollDown {
+  0% {
+    transform: translate3d(0, -50%, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.project-scroll-up {
+  animation: projectScrollUp var(--scroll-duration, 50s) linear infinite;
+  will-change: transform;
+}
+
+.project-scroll-down {
+  animation: projectScrollDown var(--scroll-duration, 50s) linear infinite;
+  will-change: transform;
+}
+
+/* Pause column track on hover or when section is off-screen/tab hidden */
+.column-group:hover .project-track,
+.column-group:focus-within .project-track,
+.projects-paused .project-track {
+  animation-play-state: paused !important;
+}
+
+/* Top & Bottom Soft Fade Mask */
+.project-fade-mask {
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 7%,
+    black 93%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 7%,
+    black 93%,
+    transparent 100%
+  );
+}
+
+/* Card Screenshot Preview Hover Scrolling */
+.project-card-image {
+  background-size: 100% auto;
+  background-position: top center;
+  background-repeat: no-repeat;
+  transition: background-position 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.project-card:hover .project-card-image,
+.project-card:focus-visible .project-card-image,
+.project-card:focus-within .project-card-image {
+  background-position: bottom center;
+  transition: background-position var(--preview-duration, 5s) cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
 /* Reduced motion overrides */
 @media (prefers-reduced-motion: reduce) {
   html {

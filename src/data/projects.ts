@@ -1,100 +1,438 @@
-// TODO: Real videos 1280x720, H.264 mp4, no audio, 5 to 8 second loop, under 3 MB each.
-
-export interface ProjectMedia {
-  type: 'image' | 'video'
-  src: string
-  poster?: string
-}
+export type ProjectCategory =
+  | 'All'
+  | 'WordPress'
+  | 'Shopify'
+  | 'Webflow'
+  | 'Wix'
+  | 'Custom HTML'
+  | 'AI Automation'
 
 export interface ProjectItem {
-  slug: string
+  id: string
   title: string
-  category: 'WordPress' | 'Shopify' | 'Webflow' | 'Wix' | 'AI Automation'
+  category: Exclude<ProjectCategory, 'All'>
   description: string
-  stack: string[]
-  liveUrl: string | null
-  media: ProjectMedia
+  image: string
+  origImage?: string
+  video?: string
+  url: string // Leave "" for all, user can add live links
+  domain: string
+  tint: string
+  scrollDuration: string // e.g. "4s", "6s"
 }
 
-export const projects: ProjectItem[] = [
+export const filterCategories: ProjectCategory[] = [
+  'All',
+  'WordPress',
+  'Shopify',
+  'Webflow',
+  'Wix',
+  'Custom HTML',
+  'AI Automation',
+]
+
+/**
+ * 26 Client Projects + AI Automation Showcase Items.
+ * All client projects match original high-resolution full page captures.
+ */
+export const allProjects: ProjectItem[] = [
+  // --- COLUMN 1 (Filter = All) ---
   {
-    slug: 'black-buck-designs',
-    title: 'Black Buck Designs',
-    category: 'WordPress',
-    description:
-      'Custom WordPress theme built with ACF Pro flexible content blocks and a customised WooCommerce checkout.',
-    stack: ['WordPress', 'ACF Pro', 'WooCommerce', 'PHP'],
-    liveUrl: 'https://blackbuckdesigns.com',
-    media: {
-      type: 'image',
-      src: '/projects/acf-12.png',
-    },
-  },
-  {
-    slug: 'keeps-pk',
-    title: 'Keeps.pk',
+    id: 'malihakamal',
+    title: 'Maliha Kamal',
     category: 'Shopify',
-    description:
-      'Custom Shopify Liquid theme with an AJAX cart drawer and a variant picker, built without extra apps.',
-    stack: ['Shopify', 'Liquid', 'JavaScript', 'CSS'],
-    liveUrl: 'https://keeps.pk',
-    media: {
-      type: 'image',
-      src: '/projects/shopify-1.png',
-    },
+    description: 'Boutique fashion store on Shopify with a full-width hero banner and an elegant product grid.',
+    image: '/projects/optimized/malihakamal.webp',
+    origImage: '/projects/originals/malihakamal.webp',
+    url: '',
+    domain: 'malihakamal.com',
+    tint: '#d97706',
+    scrollDuration: '4s',
   },
   {
-    slug: 'medshop-pk',
-    title: 'Medshop.pk',
-    category: 'Shopify',
-    description:
-      'Speed work on an existing store: Liquid code cleanup, image compression and deferred scripts.',
-    stack: ['Shopify Liquid', 'JavaScript', 'Core Web Vitals'],
-    liveUrl: 'https://medshop.pk',
-    media: {
-      type: 'image',
-      src: '/projects/medshop.png',
-    },
-  },
-  {
-    slug: 'my-design-buddy',
+    id: 'mydesignbuddy',
     title: 'My Design Buddy',
     category: 'Webflow',
-    description:
-      'Responsive Webflow site with CMS collections, custom interactions and a lead form.',
-    stack: ['Webflow', 'CMS', 'Custom JavaScript'],
-    liveUrl: 'https://mydesignbuddy.co.uk',
-    media: {
-      type: 'image',
-      src: '/projects/webflow-10.png',
-    },
+    description: 'Playful Webflow site with CMS content, custom interactions and a design subscription pricing section.',
+    image: '/projects/optimized/mydesignbuddy.webp',
+    origImage: '/projects/originals/mydesignbuddy.webp',
+    url: '',
+    domain: 'mydesignbuddy.co.uk',
+    tint: '#ec4899',
+    scrollDuration: '5.2s',
   },
   {
-    slug: 'order-and-support-automation',
-    title: 'Order and support automation',
-    category: 'AI Automation',
-    description:
-      'An n8n workflow that takes new Shopify orders, checks them with OpenAI and posts updates to Slack.',
-    stack: ['n8n', 'OpenAI API', 'Webhooks', 'Slack'],
-    liveUrl: null,
-    media: {
-      type: 'video',
-      src: '/videos/projects/order-automation.mp4',
-      poster: '/videos/projects/order-automation.webp',
-    },
+    id: 'urbansneaks',
+    title: 'Urban Sneaks',
+    category: 'WordPress',
+    description: 'Sneaker store with a bold hero, category tiles, product grids, brand logos and a newsletter signup.',
+    image: '/projects/optimized/urbansneaks.webp',
+    origImage: '/projects/originals/urbansneaks.webp',
+    url: '',
+    domain: 'urbansneaks.com',
+    tint: '#3b82f6',
+    scrollDuration: '4.1s',
   },
   {
-    slug: 'wix-studio-business-site',
-    title: 'Wix Studio business site',
+    id: 'valscode-stylesgroup',
+    title: 'Styles Group',
+    category: 'WordPress',
+    description: 'Dark, premium corporate site for an IT and retail solutions company, with a sliding services showcase, red accent sections and a quote form.',
+    image: '/projects/optimized/valscode-stylesgroup.webp',
+    origImage: '/projects/originals/valscode-stylesgroup.webp',
+    url: '',
+    domain: 'stylesgroup.com',
+    tint: '#b91c1c',
+    scrollDuration: '4s',
+  },
+  {
+    id: 'keeps-pk',
+    title: 'Keeps.pk',
+    category: 'Shopify',
+    description: 'Custom Shopify Liquid store for imported household and hygiene products, with an AJAX cart and clean collection sections.',
+    image: '/projects/optimized/keeps-pk.webp',
+    origImage: '/projects/originals/keeps-pk.webp',
+    url: '',
+    domain: 'keeps.pk',
+    tint: '#0284c7',
+    scrollDuration: '6s',
+  },
+  {
+    id: 'fitzonefactory',
+    title: 'Fit Zone Factory',
+    category: 'WordPress',
+    description: 'Supplement store with bold dark sections, product carousel, brand strip and testimonial slider.',
+    image: '/projects/optimized/fitzonefactory.webp',
+    origImage: '/projects/originals/fitzonefactory.webp',
+    url: '',
+    domain: 'fitzonefactory.com',
+    tint: '#f59e0b',
+    scrollDuration: '4s',
+  },
+  {
+    id: 'habitat-medical-center',
+    title: 'Habitat at the Medical Center',
+    category: 'WordPress',
+    description: 'Apartment leasing site built with Kadence: floor plans, live availability, location map, FAQs and a tour request form.',
+    image: '/projects/optimized/habitat-medical-center.webp',
+    origImage: '/projects/originals/habitat-medical-center.png',
+    url: '',
+    domain: 'habitatmedicalcenter.com',
+    tint: '#15803d',
+    scrollDuration: '6s',
+  },
+  {
+    id: 'textilestyles-co',
+    title: 'Textile Styles (Store)',
+    category: 'Shopify',
+    description: 'Fashion store with category banners, a deals-of-the-day countdown and clean collection sections.',
+    image: '/projects/optimized/textilestyles-co.webp',
+    origImage: '/projects/originals/textilestyles-co.webp',
+    url: '',
+    domain: 'textilestyles.co.za',
+    tint: '#ea580c',
+    scrollDuration: '4s',
+  },
+
+  // --- COLUMN 2 (Filter = All) ---
+  {
+    id: 'blackbuckdesigns',
+    title: 'Black Buck Designs',
+    category: 'WordPress',
+    description: 'Branding and web agency site with custom sections, pricing plans and a logo and website portfolio.',
+    image: '/projects/optimized/blackbuckdesigns.webp',
+    origImage: '/projects/originals/blackbuckdesigns.webp',
+    url: '',
+    domain: 'blackbuckdesigns.com',
+    tint: '#3b82f6',
+    scrollDuration: '6s',
+  },
+  {
+    id: 'pk-creoliving',
+    title: 'CREO Home & Living',
+    category: 'Shopify',
+    description: 'Premium home décor store with product carousels, gift collections and an Instagram feed.',
+    image: '/projects/optimized/pk-creoliving.webp',
+    origImage: '/projects/originals/pk-creoliving.webp',
+    url: '',
+    domain: 'creoliving.pk',
+    tint: '#c9a24d',
+    scrollDuration: '4s',
+  },
+  {
+    id: 'popping-social',
+    title: 'Popping',
     category: 'Wix',
-    description:
-      'Responsive business site built on Wix Studio with a clear inquiry flow.',
-    stack: ['Wix Studio', 'Responsive Design', 'SEO'],
-    liveUrl: null,
-    media: {
-      type: 'video',
-      src: '/videos/projects/wix-business.mp4',
-      poster: '/videos/projects/wix-business.webp',
-    },
+    description: 'Wix Studio landing page for a social app, with scroll animations and app-store buttons.',
+    image: '/projects/optimized/popping-social.webp',
+    origImage: '/projects/originals/popping-social.webp',
+    url: '',
+    domain: 'popping.social',
+    tint: '#f43f5e',
+    scrollDuration: '4s',
+  },
+  {
+    id: 'metro-group',
+    title: 'Metro Group',
+    category: 'WordPress',
+    description: 'Corporate site for a plastics and steel manufacturer in Tanzania, built with Kadence, with bold split color sections and a regional reach map.',
+    image: '/projects/optimized/metro-group.webp',
+    origImage: '/projects/originals/metro-group.png',
+    url: '',
+    domain: 'metro-tz.com',
+    tint: '#f97316',
+    scrollDuration: '6s',
+  },
+  {
+    id: 'snug-n-play',
+    title: 'Snug N Play',
+    category: 'Shopify',
+    description: 'Baby products store customised with Liquid: hero slider, category blocks, age-based shopping and reviews.',
+    image: '/projects/optimized/snug-n-play.webp',
+    origImage: '/projects/originals/snug-n-play.png',
+    url: '',
+    domain: 'snugnplay.com',
+    tint: '#06b6d4',
+    scrollDuration: '4s',
+  },
+  {
+    id: 'creativefinancegames',
+    title: 'Creative Cash Flow',
+    category: 'WordPress',
+    description: 'Product site for a real-estate investing board game, with a hero, how-to-play section, video testimonials and a contact form.',
+    image: '/projects/optimized/creativefinancegames.webp',
+    origImage: '/projects/originals/creativefinancegames.webp',
+    url: '',
+    domain: 'creativefinancegames.com',
+    tint: '#38bdf8',
+    scrollDuration: '4s',
+  },
+  {
+    id: 'featherlite-logistics',
+    title: 'Featherlite Logistics',
+    category: 'WordPress',
+    description: 'Container drayage company site built with Elementor: quote request form, services grid, lanes table and driver recruitment.',
+    image: '/projects/optimized/featherlite-logistics.webp',
+    origImage: '/projects/originals/featherlite-logistics.png',
+    url: '',
+    domain: 'featherlitelogistics.com',
+    tint: '#f97316',
+    scrollDuration: '4s',
+  },
+  {
+    id: 'jahrealtors',
+    title: 'JAH Realtors',
+    category: 'WordPress',
+    description: 'Real estate listings site for Texas with city browsing, property cards, a video section and agent contact.',
+    image: '/projects/optimized/jahrealtors.webp',
+    origImage: '/projects/originals/jahrealtors.webp',
+    url: '',
+    domain: 'jahrealtors.com',
+    tint: '#2563eb',
+    scrollDuration: '4s',
+  },
+
+  // --- COLUMN 3 (Filter = All) ---
+  {
+    id: 'stylezonefactory',
+    title: 'Style Zone Factory',
+    category: 'Shopify',
+    description: 'Multi-department marketplace-style Shopify store with deals, trending categories and product tabs.',
+    image: '/projects/optimized/stylezonefactory.webp',
+    origImage: '/projects/originals/stylezonefactory.webp',
+    url: '',
+    domain: 'stylezonefactory.com',
+    tint: '#eab308',
+    scrollDuration: '4s',
+  },
+  {
+    id: 'xperti-io',
+    title: 'Xperti',
+    category: 'WordPress',
+    description: 'Tech hiring platform site built on WordPress with ACF Pro flexible content blocks.',
+    image: '/projects/optimized/xperti-io.webp',
+    origImage: '/projects/originals/xperti-io.webp',
+    url: '',
+    domain: 'xperti.io',
+    tint: '#16a34a',
+    scrollDuration: '4s',
+  },
+  {
+    id: 'purechoicefoods',
+    title: 'Pure Choice Foods',
+    category: 'WordPress',
+    description: 'Single-product food brand site for clarified butter with a warm palette, video block, testimonial and gallery.',
+    image: '/projects/optimized/purechoicefoods.webp',
+    origImage: '/projects/originals/purechoicefoods.webp',
+    url: '',
+    domain: 'purechoicefoods.us',
+    tint: '#84cc16',
+    scrollDuration: '4s',
+  },
+  {
+    id: 'thecopyworx',
+    title: 'The Copy Worx',
+    category: 'WordPress',
+    description: 'Copywriter brand site with playful, colorful sections, service cards, lead magnets, podcast and blog.',
+    image: '/projects/optimized/thecopyworx.webp',
+    origImage: '/projects/originals/thecopyworx.webp',
+    url: '',
+    domain: 'thecopyworx.com',
+    tint: '#6366f1',
+    scrollDuration: '6s',
+  },
+  {
+    id: 'steadily',
+    title: 'Steadily',
+    category: 'Webflow',
+    description: 'Landlord insurance marketing site in Webflow with a quote form, review marquee and coverage sections.',
+    image: '/projects/optimized/steadily.webp',
+    origImage: '/projects/originals/steadily.webp',
+    url: '',
+    domain: 'steadily.com',
+    tint: '#7c3aed',
+    scrollDuration: '4.7s',
+  },
+  {
+    id: 'customwebproficient',
+    title: 'Custom Web Pro',
+    category: 'Custom HTML',
+    description: 'Hand-coded agency website in HTML, CSS and JavaScript with a services grid, filterable portfolio and pricing packages.',
+    image: '/projects/optimized/customwebproficient.webp',
+    origImage: '/projects/originals/customwebproficient.webp',
+    url: '',
+    domain: 'customwebproficient.com',
+    tint: '#f43f5e',
+    scrollDuration: '4.6s',
+  },
+  {
+    id: 'petroflow-control',
+    title: 'Petro Flow Control',
+    category: 'WordPress',
+    description: 'Industrial supplier site for valves, pipes and fittings with a product gallery, catalogue section and inquiry flow.',
+    image: '/projects/optimized/petroflow-control.webp',
+    origImage: '/projects/originals/petroflow-control.webp',
+    url: '',
+    domain: 'petroflow-control.com',
+    tint: '#dc2626',
+    scrollDuration: '4s',
+  },
+  {
+    id: 'urban-arc-properties',
+    title: 'Urban Arc Properties',
+    category: 'WordPress',
+    description: 'New-construction homes site for Houston built with Elementor, with project listings, an inquiry form and a clean editorial layout.',
+    image: '/projects/optimized/urban-arc-properties.webp',
+    origImage: '/projects/originals/urban-arc-properties.png',
+    url: '',
+    domain: 'urbanarcproperties.com',
+    tint: '#64748b',
+    scrollDuration: '4s',
+  },
+  {
+    id: 'medshop-pk',
+    title: 'Medshop.pk',
+    category: 'WordPress',
+    description: 'Medical equipment store with category browsing, featured and sale product tabs, and a trust banner.',
+    image: '/projects/optimized/medshop-pk.webp',
+    origImage: '/projects/originals/medshop-pk.webp',
+    url: '',
+    domain: 'medshop.pk',
+    tint: '#06b6d4',
+    scrollDuration: '4s',
+  },
+  {
+    id: 'textilestyles-org',
+    title: 'Textile Styles',
+    category: 'WordPress',
+    description: 'Textile and retail operations consulting site with services, skills counters, process steps and client logos.',
+    image: '/projects/optimized/textilestyles-org.webp',
+    origImage: '/projects/originals/textilestyles-org.webp',
+    url: '',
+    domain: 'textilestyles.org',
+    tint: '#0ea5e9',
+    scrollDuration: '5.2s',
+  },
+
+  // --- AI AUTOMATION ITEMS ---
+  {
+    id: 'shopify-support-ai',
+    title: 'Shopify support',
+    category: 'AI Automation',
+    description: 'Customer orders and support messages verified and processed automatically.',
+    image: '/projects/optimized/keeps-pk.webp',
+    video: '/videos/ai/shopify-support.mp4',
+    url: '',
+    domain: 'shopify-support.ai',
+    tint: '#c9a24d',
+    scrollDuration: '6s',
+  },
+  {
+    id: 'agency-support-ai',
+    title: 'Agency support',
+    category: 'AI Automation',
+    description: 'Client communication and support requests routed to the right team members.',
+    image: '/projects/optimized/blackbuckdesigns.webp',
+    video: '/videos/ai/agency-support.mp4',
+    url: '',
+    domain: 'agency-support.ai',
+    tint: '#3b82f6',
+    scrollDuration: '6s',
+  },
+  {
+    id: 'content-automation-ai',
+    title: 'Content automation',
+    category: 'AI Automation',
+    description: 'Drafting, research and publishing workflows automated with OpenAI.',
+    image: '/projects/optimized/thecopyworx.webp',
+    video: '/videos/ai/content-automation.mp4',
+    url: '',
+    domain: 'content-automation.ai',
+    tint: '#10b981',
+    scrollDuration: '6s',
   },
 ]
+
+/**
+ * Explicit Column Order when filter === 'All':
+ * Column 1 (8 items): Maliha Kamal, My Design Buddy, Urban Sneaks, Styles Group, Keeps.pk, Fit Zone Factory, Habitat at the Medical Center, Textile Styles (Store)
+ * Column 2 (8 items): Black Buck Designs, CREO Home & Living, Popping, Metro Group, Snug N Play, Creative Cash Flow, Featherlite Logistics, JAH Realtors
+ * Column 3 (10 items): Style Zone Factory, Xperti, Pure Choice Foods, The Copy Worx, Steadily, Custom Web Pro, Petro Flow Control, Urban Arc Properties, Medshop.pk, Textile Styles
+ */
+export const column1Ids = [
+  'malihakamal',
+  'mydesignbuddy',
+  'urbansneaks',
+  'valscode-stylesgroup',
+  'keeps-pk',
+  'fitzonefactory',
+  'habitat-medical-center',
+  'textilestyles-co',
+]
+
+export const column2Ids = [
+  'blackbuckdesigns',
+  'pk-creoliving',
+  'popping-social',
+  'metro-group',
+  'snug-n-play',
+  'creativefinancegames',
+  'featherlite-logistics',
+  'jahrealtors',
+]
+
+export const column3Ids = [
+  'stylezonefactory',
+  'xperti-io',
+  'purechoicefoods',
+  'thecopyworx',
+  'steadily',
+  'customwebproficient',
+  'petroflow-control',
+  'urban-arc-properties',
+  'medshop-pk',
+  'textilestyles-org',
+]
+
+// Backwards compatibility export
+export const projects = allProjects
