@@ -1,1 +1,1 @@
-export { default, FluidBackground } from './FluidBackground'
+export { default, LiquidBackground as FluidBackground, LiquidBackground } from './LiquidBackground'

@@ -5,7 +5,7 @@ import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { FloatingWhatsApp } from '@/components/floating-whatsapp'
 import { JsonLd } from '@/components/json-ld'
-import FluidBackground from '@/components/FluidBackground'
+import LiquidBackground from '@/components/LiquidBackground'
 
 const urbanist = Urbanist({
   subsets: ['latin'],
@@ -84,8 +84,8 @@ export default function RootLayout({
         <JsonLd />
       </head>
       <body className={`${urbanist.variable} ${poppins.variable} font-sans antialiased bg-canvas text-ink relative min-h-screen`}>
-        {/* Global WebGL2 Fluid Smoke Background */}
-        <FluidBackground />
+        {/* Global WebGL Liquid Ink Marbling Background */}
+        <LiquidBackground />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-5 focus:py-3 focus:bg-brass focus:text-canvas focus:font-semibold focus:rounded-[8px] focus:outline-none"
