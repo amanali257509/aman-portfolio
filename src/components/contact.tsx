@@ -299,9 +299,31 @@ export function Contact() {
                     </div>
                   )}
                   {status === 'error' && (
-                    <div className="p-4 rounded-[8px] bg-canvas border border-red-500/40 text-[14px] text-red-300">
-                      <span className="font-semibold block mb-1">Error sending message</span>
-                      <span>{responseMessage}</span>
+                    <div className="p-4 rounded-[8px] bg-canvas border border-brass/50 text-[14px] text-ink">
+                      <span className="font-semibold block text-brass mb-1">Direct message options</span>
+                      <p className="text-muted text-[13px] leading-relaxed mb-3">{responseMessage}</p>
+                      <div className="pt-2 border-t border-line flex flex-wrap gap-2.5">
+                        <a
+                          href={`mailto:${profile.email}?subject=${encodeURIComponent(
+                            `Portfolio Inquiry: ${formData.topic || 'General'}`
+                          )}&body=${encodeURIComponent(
+                            `Name: ${formData.name}\nEmail: ${formData.email}\nTopic: ${formData.topic}\n\nMessage:\n${formData.message}`
+                          )}`}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] bg-brass text-canvas font-semibold text-[13px] hover:bg-brass-hover transition-colors shadow-sm"
+                        >
+                          Send via Email App ↗
+                        </a>
+                        <a
+                          href={`https://wa.me/923112756456?text=${encodeURIComponent(
+                            `Hi Aman,\n\nName: ${formData.name}\nEmail: ${formData.email}\nTopic: ${formData.topic}\n\nMessage:\n${formData.message}`
+                          )}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] bg-[#25D366] text-[#0a150c] font-semibold text-[13px] hover:brightness-105 transition-colors shadow-sm"
+                        >
+                          Send on WhatsApp ↗
+                        </a>
+                      </div>
                     </div>
                   )}
                 </div>

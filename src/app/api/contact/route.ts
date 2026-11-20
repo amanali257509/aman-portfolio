@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true, message: 'Message sent.' })
     }
 
-    // 2. Reject if submitted in under 1 second (bot protection, but allow fast autofill)
+    // 2. Reject if submitted in under 1 second (bot protection)
     const now = Date.now()
     const elapsed = (submittedAt || now) - (mountedAt || 0)
     if (mountedAt && elapsed < 1000) {
@@ -63,76 +63,48 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // 4. Try Resend if RESEND_API_KEY is configured
+    // 4. Verify RESEND_API_KEY
     const resendApiKey = process.env.RESEND_API_KEY
-    if (resendApiKey) {
-      try {
-        const resend = new Resend(resendApiKey)
-        const { error } = await resend.emails.send({
-          from: 'Portfolio <onboarding@resend.dev>',
-          to: RECIPIENT_EMAIL,
-          replyTo: email.trim(),
-          subject: `Portfolio message: ${topic || 'General'} from ${name.trim()}`,
-          text: `Name: ${name.trim()}\nEmail: ${email.trim()}\nTopic: ${topic || 'General'}\n\nMessage:\n${message.trim()}`,
-        })
-
-        if (!error) {
-          return NextResponse.json({
-            success: true,
-            message: 'Thank you! Your message has been received. I will reply by email soon.',
-          })
-        }
-        console.warn('[Contact Form Resend Error, falling back to FormSubmit]:', error)
-      } catch (resendErr) {
-        console.warn('[Contact Form Resend Exception, falling back to FormSubmit]:', resendErr)
-      }
+    if (!resendApiKey) {
+      console.warn('[Contact Form Warning]: RESEND_API_KEY is not configured in Vercel environment variables.')
+      return NextResponse.json(
+        {
+          error: `Email delivery setup pending. Click below to send directly to ${RECIPIENT_EMAIL} or message on WhatsApp.`,
+        },
+        { status: 503 }
+      )
     }
 
-    // 5. Automatic Reliable Delivery via FormSubmit directly to amanali257509@gmail.com
-    const formSubmitRes = await fetch(`https://formsubmit.co/ajax/${RECIPIENT_EMAIL}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        Origin: 'https://aman-ali.vercel.app',
-        Referer: 'https://aman-ali.vercel.app/',
-      },
-      body: JSON.stringify({
-        Name: name.trim(),
-        Email: email.trim(),
-        Topic: topic || 'General',
-        Message: message.trim(),
-        _subject: `New Portfolio Message: ${topic || 'General'} - from ${name.trim()}`,
-        _template: 'table',
-      }),
+    // 5. Send email via Resend directly to amanali257509@gmail.com
+    const resend = new Resend(resendApiKey)
+    const { error } = await resend.emails.send({
+      from: 'Portfolio Contact <onboarding@resend.dev>',
+      to: RECIPIENT_EMAIL,
+      replyTo: email.trim(),
+      subject: `New Lead: ${name.trim()} (${topic || 'General'})`,
+      text: `New contact form submission from your portfolio website:\n\nName: ${name.trim()}\nEmail: ${email.trim()}\nTopic: ${topic || 'General'}\n\nMessage:\n${message.trim()}\n\n---\nSent from aman-ali.vercel.app`,
     })
 
-    const formSubmitData = await formSubmitRes.json()
-
-    if (
-      formSubmitRes.ok ||
-      formSubmitData.success === 'true' ||
-      formSubmitData.success === true ||
-      (formSubmitData.message && formSubmitData.message.includes('Activation'))
-    ) {
-      return NextResponse.json({
-        success: true,
-        message: 'Thank you! Your message has been received. I will reply by email soon.',
-      })
+    if (error) {
+      console.error('[Contact Form Resend Error]:', error)
+      return NextResponse.json(
+        {
+          error: `Delivery service error: ${error.message || 'Please send your email directly to ' + RECIPIENT_EMAIL}.`,
+        },
+        { status: 500 }
+      )
     }
 
-    return NextResponse.json(
-      {
-        error:
-          formSubmitData.message ||
-          `Failed to deliver message. Please contact ${RECIPIENT_EMAIL} directly.`,
-      },
-      { status: 500 }
-    )
+    return NextResponse.json({
+      success: true,
+      message: 'Thank you! Your message has been sent directly to Aman Ali. I will reply by email soon.',
+    })
   } catch (err: unknown) {
     console.error('[Contact Form Exception]:', err)
     return NextResponse.json(
-      { error: 'Something went wrong while processing your request. Please try again.' },
+      {
+        error: `Something went wrong while processing your request. Please email directly to ${RECIPIENT_EMAIL}.`,
+      },
       { status: 500 }
     )
   }
