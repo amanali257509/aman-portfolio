@@ -47,7 +47,7 @@ export const profile: ProfileData = {
     paragraph:
       "I'm a web developer from Karachi with 5+ years of experience in e-commerce, WordPress and Shopify. I also build workflows with n8n, Zapier and OpenAI to automate orders, support and daily operations. Open to remote work worldwide.",
     primaryCta: 'Contact me',
-    secondaryCta: 'Download CV',
+    secondaryCta: 'View CV',
     facts: ['5+ years experience', 'Karachi, Pakistan'],
   },
   education: {

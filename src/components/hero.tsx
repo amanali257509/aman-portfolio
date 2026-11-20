@@ -1,16 +1,36 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { ArrowRight, Download } from 'lucide-react'
+import { ArrowRight, Download, FileText, X, ExternalLink } from 'lucide-react'
 import { profile } from '@/data/profile'
 import TiltPhoto from './TiltPhoto'
 
 export function Hero() {
   const [mounted, setMounted] = useState(false)
+  const [cvModalOpen, setCvModalOpen] = useState(false)
 
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  // Lock body scroll and handle ESC key for CV modal
+  useEffect(() => {
+    if (!cvModalOpen) return
+    const originalOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setCvModalOpen(false)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.body.style.overflow = originalOverflow
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [cvModalOpen])
 
   return (
     <section
@@ -72,16 +92,16 @@ export function Hero() {
                 <ArrowRight className="w-4 h-4 btn-arrow" strokeWidth={1.75} />
               </a>
 
-              <a
-                href={profile.links.cv}
-                download="Aman_Ali_CV.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-secondary group/btn"
+              {/* View CV in Modal Button */}
+              <button
+                type="button"
+                onClick={() => setCvModalOpen(true)}
+                aria-label="View Aman Ali CV in popup"
+                className="btn-secondary group/btn cursor-pointer"
               >
-                <Download className="w-4 h-4 text-brass transition-transform duration-200 group-hover/btn:-translate-y-0.5" strokeWidth={2} />
+                <FileText className="w-4 h-4 text-brass transition-transform duration-200 group-hover/btn:-translate-y-0.5" strokeWidth={2} />
                 <span>{profile.hero.secondaryCta}</span>
-              </a>
+              </button>
             </div>
 
             {/* Facts under buttons */}
@@ -115,6 +135,87 @@ export function Hero() {
           </div>
         </div>
       </div>
+
+      {/* CV PDF Lightbox / Modal */}
+      {cvModalOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Aman Ali CV Preview"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-5 md:p-8 bg-black/85 backdrop-blur-md animate-in fade-in duration-200"
+          onClick={() => setCvModalOpen(false)}
+        >
+          <div
+            className="relative flex flex-col w-full max-w-4xl h-[90vh] rounded-[20px] border border-line bg-surface shadow-[0_25px_65px_rgba(0,0,0,0.85)] overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 border-b border-line bg-[#121813]/95 gap-3 flex-shrink-0">
+              {/* Left: Window controls + Title */}
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="flex items-center gap-1.5 hidden sm:flex">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#ef4444]" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#f59e0b]" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#10b981]" />
+                </div>
+                <div className="h-4 w-[1px] bg-line hidden sm:block" />
+                <div className="min-w-0 flex items-center gap-2">
+                  <span className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-brass/10 border border-brass/30 text-brass font-semibold uppercase tracking-wider">
+                    PDF
+                  </span>
+                  <h3 className="text-[15px] sm:text-[16px] font-heading font-semibold text-ink truncate">
+                    Aman Ali — Curriculum Vitae
+                  </h3>
+                </div>
+              </div>
+
+              {/* Right: Actions (Download + Open in New Tab + Close) */}
+              <div className="flex items-center gap-2 flex-shrink-0">
+                {/* Download Button */}
+                <a
+                  href={profile.links.cv}
+                  download="Aman_Ali_CV.pdf"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[13px] font-semibold bg-brass text-canvas hover:bg-brass-hover transition-colors shadow-sm"
+                >
+                  <Download className="w-3.5 h-3.5" strokeWidth={2} />
+                  <span>Download PDF</span>
+                </a>
+
+                {/* Open in New Tab */}
+                <a
+                  href={profile.links.cv}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Open PDF in new browser tab"
+                  className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[12px] font-medium text-muted hover:text-ink hover:bg-canvas/50 border border-line transition-colors"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  <span>New Tab</span>
+                </a>
+
+                {/* Close Button */}
+                <button
+                  type="button"
+                  onClick={() => setCvModalOpen(false)}
+                  aria-label="Close CV preview"
+                  className="p-1.5 sm:p-2 rounded-lg text-muted hover:text-ink hover:bg-canvas/60 border border-line transition-colors ml-1 cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Body: PDF Viewer */}
+            <div className="relative flex-1 w-full bg-[#0a0d0b] overflow-hidden">
+              <iframe
+                src={`${profile.links.cv}#toolbar=1&navpanes=0`}
+                className="w-full h-full border-none bg-canvas"
+                title="Aman Ali CV Preview"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   )
 }
