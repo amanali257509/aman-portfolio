@@ -128,9 +128,9 @@ export function Hero() {
             }`}
           >
             <TiltPhoto
-              src="/aman-banner.webp"
+              src="/aman-cutout.png"
               alt="Aman Ali - WordPress & Shopify Expert | AI Automation Specialist"
-              chips={['Shopify', 'WordPress', 'n8n']}
+              chips={['Shopify', 'WordPress', 'n8n', 'Zapier', 'OpenAI']}
             />
           </div>
         </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import Image from 'next/image'
 
 interface TiltPhotoProps {
@@ -10,24 +10,22 @@ interface TiltPhotoProps {
   className?: string
 }
 
-/**
- * 3D hover photo: card tilts toward the cursor (up to 12 deg),
- * glare follows the pointer, chips float in front with 3D depth,
- * smooth return on leave, disabled on touch devices and reduced-motion.
- */
+const DEFAULT_CHIPS = ['Shopify', 'WordPress', 'n8n', 'Zapier', 'OpenAI']
+
 export default function TiltPhoto({
-  src = '/aman-banner.webp',
+  src = '/aman-cutout.png',
   alt = 'Aman Ali - WordPress & Shopify Expert | AI Automation Specialist',
-  chips = ['Shopify', 'WordPress', 'n8n'],
+  chips = DEFAULT_CHIPS,
   className = '',
 }: TiltPhotoProps) {
-  const sceneRef = useRef<HTMLDivElement>(null)
-  const cardRef = useRef<HTMLDivElement>(null)
-  const glareRef = useRef<HTMLDivElement>(null)
-  const MAX = 12 // max tilt in degrees
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const containerRef = useRef<HTMLDivElement | null>(null)
 
-  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (e.pointerType === 'touch' || !sceneRef.current || !cardRef.current) return
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    // Respect prefers-reduced-motion
     if (
       typeof window !== 'undefined' &&
       window.matchMedia &&
@@ -36,86 +34,220 @@ export default function TiltPhoto({
       return
     }
 
-    const rect = sceneRef.current.getBoundingClientRect()
-    const px = (e.clientX - rect.left) / rect.width // 0..1
-    const py = (e.clientY - rect.top) / rect.height
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
 
-    cardRef.current.style.transition = 'transform 80ms ease-out'
-    cardRef.current.style.transform = `rotateY(${(px - 0.5) * 2 * MAX}deg) rotateX(${-(py - 0.5) * 2 * MAX}deg) scale3d(1.02, 1.02, 1.02)`
+    let animId: number
+    let width = 0
+    let height = 0
+    let isVisible = true
 
-    if (glareRef.current) {
-      glareRef.current.style.opacity = '1'
-      glareRef.current.style.background = `radial-gradient(circle at ${px * 100}% ${py * 100}%, rgba(255, 255, 255, 0.22), transparent 55%)`
+    interface Particle {
+      x: number
+      y: number
+      vx: number
+      vy: number
+      r: number
     }
-  }
 
-  const handlePointerLeave = () => {
-    if (!cardRef.current) return
-    cardRef.current.style.transition = 'transform 600ms cubic-bezier(0.2, 0.8, 0.2, 1)'
-    cardRef.current.style.transform = 'rotateY(0deg) rotateX(0deg) scale3d(1, 1, 1)'
-    if (glareRef.current) {
-      glareRef.current.style.opacity = '0'
+    let particles: Particle[] = []
+
+    const initParticles = () => {
+      if (!canvas) return
+      width = canvas.width = canvas.offsetWidth
+      height = canvas.height = canvas.offsetHeight
+      if (!width || !height) return
+
+      const isMobile = width < 480
+      const count = isMobile ? 18 : 34
+
+      particles = Array.from({ length: count }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: (Math.random() - 0.5) * 0.35,
+        r: Math.random() * 1.5 + 0.8,
+      }))
     }
+
+    const draw = () => {
+      if (!isVisible || !width || !height) return
+      ctx.clearRect(0, 0, width, height)
+
+      // Update and draw particles
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i]
+        p.x += p.vx
+        p.y += p.vy
+
+        if (p.x < 0 || p.x > width) p.vx *= -1
+        if (p.y < 0 || p.y > height) p.vy *= -1
+
+        ctx.fillStyle = 'rgba(240, 213, 138, 0.85)'
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
+        ctx.fill()
+      }
+
+      // Draw faint gold connecting lines
+      const maxDist = width < 480 ? 95 : 120
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x
+          const dy = particles[i].y - particles[j].y
+          const dist = Math.hypot(dx, dy)
+
+          if (dist < maxDist) {
+            const alpha = 0.22 * (1 - dist / maxDist)
+            ctx.strokeStyle = `rgba(201, 162, 77, ${alpha})`
+            ctx.lineWidth = 0.8
+            ctx.beginPath()
+            ctx.moveTo(particles[i].x, particles[i].y)
+            ctx.lineTo(particles[j].x, particles[j].y)
+            ctx.stroke()
+          }
+        }
+      }
+
+      animId = requestAnimationFrame(draw)
+    }
+
+    // Pause when tab is hidden, resume when visible
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        isVisible = false
+        cancelAnimationFrame(animId)
+      } else {
+        isVisible = true
+        animId = requestAnimationFrame(draw)
+      }
+    }
+
+    // Pause when out of viewport
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries
+        if (entry.isIntersecting) {
+          if (!isVisible) {
+            isVisible = true
+            animId = requestAnimationFrame(draw)
+          }
+        } else {
+          isVisible = false
+          cancelAnimationFrame(animId)
+        }
+      },
+      { threshold: 0.1 }
+    )
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current)
+    }
+
+    const handleResize = () => {
+      initParticles()
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    window.addEventListener('resize', handleResize)
+
+    initParticles()
+    animId = requestAnimationFrame(draw)
+
+    return () => {
+      cancelAnimationFrame(animId)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('resize', handleResize)
+      observer.disconnect()
+    }
+  }, [])
+
+  // 5 floating chips: distributed naturally around Aman, staying safely inside viewport
+  const chipLayout: Record<string, { pos: string; delay: string }> = {
+    Zapier: {
+      pos: 'top-[6%] sm:top-[8%] left-[2%] sm:-left-[1%]',
+      delay: '-3.6s',
+    },
+    Shopify: {
+      pos: 'top-[28%] sm:top-[30%] left-[0%] sm:-left-[3%]',
+      delay: '0s',
+    },
+    n8n: {
+      pos: 'bottom-[20%] sm:bottom-[22%] left-[2%] sm:-left-[1%]',
+      delay: '-2.4s',
+    },
+    WordPress: {
+      pos: 'top-[32%] sm:top-[34%] right-[0%] sm:-right-[3%]',
+      delay: '-1.2s',
+    },
+    OpenAI: {
+      pos: 'bottom-[16%] sm:bottom-[18%] right-[2%] sm:-right-[1%]',
+      delay: '-4.8s',
+    },
   }
 
   return (
     <div
-      ref={sceneRef}
-      onPointerMove={handlePointerMove}
-      onPointerLeave={handlePointerLeave}
-      style={{ perspective: 1000 }}
-      className={`relative mx-auto w-full max-w-[300px] xs:max-w-[340px] sm:max-w-[380px] lg:max-w-[420px] select-none ${className}`}
+      ref={containerRef}
+      className={`hero-portrait-stage relative mx-auto w-full max-w-[340px] xs:max-w-[380px] sm:max-w-[420px] md:max-w-[460px] lg:max-w-[480px] h-[390px] xs:h-[430px] sm:h-[480px] md:h-[520px] lg:h-[540px] select-none ${className}`}
+      aria-label={alt}
     >
-      {/* Ambient gold glow safely behind the 3D card */}
-      <div
+      {/* 1. Canvas particle net (behind everything) */}
+      <canvas
+        ref={canvasRef}
         aria-hidden="true"
-        className="absolute -inset-4 rounded-[36px] bg-gradient-to-tr from-brass/25 via-brass/10 to-transparent blur-xl pointer-events-none -z-10"
+        className="pointer-events-none absolute inset-0 z-0 h-full w-full"
       />
 
+      {/* 2. Soft pulsing gold glow */}
       <div
-        ref={cardRef}
-        style={{ transformStyle: 'preserve-3d', willChange: 'transform' }}
-        className="relative"
-      >
-        {/* Photo Container */}
-        <div className="relative aspect-square overflow-hidden rounded-[24px] border border-brass/30 shadow-[0_24px_50px_-15px_rgba(0,0,0,0.85)] bg-surface">
+        aria-hidden="true"
+        className="hero-pulse-glow w-[74%] max-w-[380px] z-0"
+      />
+
+      {/* 3. Two thin rotating gold rings */}
+      <div
+        aria-hidden="true"
+        className="hero-gold-ring hero-gold-ring-1 z-0"
+      />
+      <div
+        aria-hidden="true"
+        className="hero-gold-ring hero-gold-ring-2 z-0"
+      />
+
+      {/* 4. Aman cutout with gentle floating motion & bottom fade */}
+      <div className="hero-cutout-float relative z-10 w-full h-full flex items-end justify-center pointer-events-none">
+        <div className="hero-cutout-mask relative w-full h-[95%] max-w-[440px]">
           <Image
             src={src}
             alt={alt}
             fill
             priority
-            sizes="(max-width: 640px) 280px, (max-width: 1024px) 380px, 420px"
-            className="object-cover"
-          />
-          <div
-            ref={glareRef}
-            style={{ opacity: 0, transition: 'opacity 300ms' }}
-            className="pointer-events-none absolute inset-0 z-10"
+            sizes="(max-width: 640px) 340px, (max-width: 1024px) 440px, 480px"
+            className="object-contain object-bottom drop-shadow-[0_10px_28px_rgba(201,162,77,0.25)]"
           />
         </div>
-
-        {/* Floating chips (3D depth) */}
-        {chips.map((chip, index) => {
-          const isOdd = index % 2 === 1
-          return (
-            <span
-              key={chip}
-              style={
-                {
-                  transform: `translateZ(${50 + index * 10}px)`,
-                  top: `${14 + index * 26}%`,
-                  [isOdd ? 'right' : 'left']: '-4%',
-                } as React.CSSProperties
-              }
-              className="absolute z-20 rounded-full border border-brass/35 bg-canvas/90 px-3.5 py-1.5 text-[13px] sm:text-[14px] font-medium text-ink backdrop-blur-md shadow-lg pointer-events-none"
-            >
-              {chip}
-            </span>
-          )
-        })}
       </div>
+
+      {/* 5. Floating bobbing chips */}
+      {chips.map((chip, idx) => {
+        const layout = chipLayout[chip] || {
+          pos: idx % 2 === 0 ? 'left-[2%]' : 'right-[2%]',
+          delay: `${-idx * 1.2}s`,
+        }
+        return (
+          <div
+            key={chip}
+            style={{ animationDelay: layout.delay }}
+            className={`hero-chip-bob pointer-events-none absolute z-20 flex items-center gap-1.5 rounded-full border border-brass/45 bg-[#0f1410]/85 px-3 py-1.5 sm:px-3.5 sm:py-1.5 text-[12px] sm:text-[13px] font-medium tracking-wide text-ink backdrop-blur-md shadow-[0_6px_20px_rgba(0,0,0,0.65)] ${layout.pos}`}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-brass shrink-0 shadow-[0_0_6px_rgba(201,162,77,0.8)]" />
+            <span className="font-mono">{chip}</span>
+          </div>
+        )
+      })}
     </div>
   )
 }
 
-export { TiltPhoto }
+export { TiltPhoto, TiltPhoto as HeroPortrait }

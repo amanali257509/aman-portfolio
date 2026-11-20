@@ -587,6 +587,101 @@ p {
   }
 }
 
+/* Hero Portrait Background & Cutout Animations */
+.hero-portrait-stage {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.hero-pulse-glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201, 162, 77, 0.42) 0%, rgba(201, 162, 77, 0.12) 48%, transparent 70%);
+  animation: heroPulse 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.hero-gold-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  aspect-ratio: 1;
+  background: conic-gradient(from 0deg, transparent, rgba(201, 162, 77, 0.9) 15%, transparent 40%, rgba(240, 213, 138, 0.7) 65%, transparent 85%);
+  -webkit-mask: radial-gradient(circle, transparent 62%, #000 63%, #000 65%, transparent 66%);
+  mask: radial-gradient(circle, transparent 62%, #000 63%, #000 65%, transparent 66%);
+  pointer-events: none;
+}
+
+.hero-gold-ring-1 {
+  width: min(420px, 84%);
+  animation: heroSpin 14s linear infinite;
+}
+
+.hero-gold-ring-2 {
+  width: min(500px, 96%);
+  animation: heroSpin 24s linear infinite reverse;
+  opacity: 0.55;
+}
+
+.hero-cutout-float {
+  animation: heroFloat 6s ease-in-out infinite;
+}
+
+.hero-cutout-mask {
+  -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent 98%);
+  mask-image: linear-gradient(to bottom, #000 78%, transparent 98%);
+}
+
+.hero-chip-bob {
+  animation: heroBob 5s ease-in-out infinite;
+}
+
+@keyframes heroPulse {
+  0%, 100% {
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.95;
+    transform: translate(-50%, -50%) scale(1.12);
+  }
+}
+
+@keyframes heroSpin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes heroFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes heroBob {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
 /* Reduced motion overrides */
 @media (prefers-reduced-motion: reduce) {
   html {
