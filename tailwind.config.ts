@@ -39,7 +39,8 @@ const config: Config = {
         sans: ['var(--font-body)', 'system-ui', 'sans-serif'],
       },
       maxWidth: {
-        '6xl': '72rem', // 1152px
+        '6xl': 'var(--container-width, 1275px)',
+        container: 'var(--container-width, 1275px)',
       },
     },
   },
