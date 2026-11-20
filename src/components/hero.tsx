@@ -35,15 +35,17 @@ export function Hero() {
               </span>
             </div>
 
-            {/* H1 Heading */}
+            {/* H1 Heading: 2 lines */}
             <h1
               style={{ transitionDelay: '80ms' }}
-              className={`transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              className={`text-[clamp(1.75rem,3.2vw,2.85rem)] leading-[1.15] tracking-tight transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
               }`}
             >
-              <span>{profile.hero.headingLine1}</span>
-              <span className="block text-brass mt-1">
+              <span className="block sm:whitespace-nowrap">
+                {profile.hero.headingLine1}
+              </span>
+              <span className="block text-brass mt-1 sm:mt-1.5 sm:whitespace-nowrap">
                 {profile.hero.headingLine2}
               </span>
             </h1>
