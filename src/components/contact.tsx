@@ -55,7 +55,59 @@ export function Contact() {
     setResponseMessage('')
 
     try {
-      const res = await fetch('/api/contact', {
+      // 1. Direct submission to FormSubmit for amanali257509@gmail.com
+      const res = await fetch('https://formsubmit.co/ajax/amanali257509@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          Name: formData.name.trim(),
+          Email: formData.email.trim(),
+          Topic: formData.topic,
+          Message: formData.message.trim(),
+          _subject: `New Lead: ${formData.name.trim()} - ${formData.topic}`,
+          _template: 'table',
+          _captcha: 'false',
+        }),
+      })
+
+      const data = await res.json()
+
+      if (data.success === 'true' || data.success === true) {
+        setStatus('success')
+        setResponseMessage('Thank you! Your message has been sent directly to Aman Ali. I will reply soon.')
+        setFormData({
+          name: '',
+          email: '',
+          topic: 'AI automation and workflows',
+          message: '',
+          company: '',
+        })
+        setErrors({})
+        return
+      }
+
+      // If FormSubmit requires first-time owner activation
+      if (data.message && data.message.toLowerCase().includes('activation')) {
+        setStatus('success')
+        setResponseMessage(
+          'Message submitted! Please check amanali257509@gmail.com and click "Activate Form" once to complete setup.'
+        )
+        setFormData({
+          name: '',
+          email: '',
+          topic: 'AI automation and workflows',
+          message: '',
+          company: '',
+        })
+        setErrors({})
+        return
+      }
+
+      // 2. Fallback: try server API route
+      const fallbackRes = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -65,26 +117,26 @@ export function Contact() {
         }),
       })
 
-      const data = await res.json()
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to send message.')
+      const fallbackData = await fallbackRes.json()
+      if (fallbackRes.ok && (fallbackData.success === true || fallbackData.success === 'true')) {
+        setStatus('success')
+        setResponseMessage(fallbackData.message || 'Thank you! Your message has been sent.')
+        setFormData({
+          name: '',
+          email: '',
+          topic: 'AI automation and workflows',
+          message: '',
+          company: '',
+        })
+        setErrors({})
+        return
       }
 
-      setStatus('success')
-      setResponseMessage(data.message || 'Thank you! Your message has been sent.')
-      setFormData({
-        name: '',
-        email: '',
-        topic: 'AI automation and workflows',
-        message: '',
-        company: '',
-      })
-      setErrors({})
+      throw new Error(data.message || fallbackData.error || 'Failed to deliver message.')
     } catch (err: unknown) {
       setStatus('error')
       setResponseMessage(
-        err instanceof Error ? err.message : 'Something went wrong. Please try again or email directly.'
+        err instanceof Error ? err.message : 'Something went wrong. Please try again.'
       )
     }
   }
@@ -299,31 +351,9 @@ export function Contact() {
                     </div>
                   )}
                   {status === 'error' && (
-                    <div className="p-4 rounded-[8px] bg-canvas border border-brass/50 text-[14px] text-ink">
-                      <span className="font-semibold block text-brass mb-1">Direct message options</span>
-                      <p className="text-muted text-[13px] leading-relaxed mb-3">{responseMessage}</p>
-                      <div className="pt-2 border-t border-line flex flex-wrap gap-2.5">
-                        <a
-                          href={`mailto:${profile.email}?subject=${encodeURIComponent(
-                            `Portfolio Inquiry: ${formData.topic || 'General'}`
-                          )}&body=${encodeURIComponent(
-                            `Name: ${formData.name}\nEmail: ${formData.email}\nTopic: ${formData.topic}\n\nMessage:\n${formData.message}`
-                          )}`}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] bg-brass text-canvas font-semibold text-[13px] hover:bg-brass-hover transition-colors shadow-sm"
-                        >
-                          Send via Email App ↗
-                        </a>
-                        <a
-                          href={`https://wa.me/923112756456?text=${encodeURIComponent(
-                            `Hi Aman,\n\nName: ${formData.name}\nEmail: ${formData.email}\nTopic: ${formData.topic}\n\nMessage:\n${formData.message}`
-                          )}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] bg-[#25D366] text-[#0a150c] font-semibold text-[13px] hover:brightness-105 transition-colors shadow-sm"
-                        >
-                          Send on WhatsApp ↗
-                        </a>
-                      </div>
+                    <div className="p-4 rounded-[8px] bg-canvas border border-red-500/50 text-[14px] text-ink">
+                      <span className="font-semibold block text-red-400 mb-1">Error sending message</span>
+                      <p className="text-muted text-[13px] leading-relaxed">{responseMessage}</p>
                     </div>
                   )}
                 </div>
