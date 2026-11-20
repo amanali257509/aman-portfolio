@@ -443,6 +443,144 @@ p {
   }
 }
 
+/* ==========================================================================
+   Services, Experience & Education: Premium Cards, Icons & Hover Effect
+   ========================================================================== */
+
+.service-card,
+.experience-card,
+.education-card {
+  transition:
+    transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+}
+
+.service-card-glow,
+.experience-card-glow,
+.education-card-glow {
+  background: radial-gradient(
+    320px circle at var(--mx, -999px) var(--my, -999px),
+    rgba(201, 162, 77, 0.10),
+    transparent 60%
+  );
+  z-index: 1;
+}
+
+.service-icon-tile,
+.experience-icon-tile,
+.education-icon-tile {
+  background-color: rgba(201, 162, 77, 0.08);
+  border-color: var(--line);
+  color: var(--brass);
+  transition:
+    transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.service-icon,
+.experience-icon,
+.education-icon {
+  color: var(--brass);
+  transition: color 0.3s ease;
+}
+
+.service-card-index {
+  color: rgba(152, 160, 143, 0.30);
+  transition: color 0.35s ease;
+}
+
+.service-card-content {
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.service-card-title,
+.experience-card-title,
+.education-card-title {
+  color: var(--ink);
+  transition: color 0.3s ease;
+}
+
+.service-chip {
+  color: var(--muted);
+  border-color: var(--line);
+  background-color: transparent;
+  transition:
+    transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 0.25s ease,
+    background-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.2s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .service-card:hover,
+  .experience-card:hover,
+  .education-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(201, 162, 77, 0.38);
+    background-color: rgba(23, 30, 24, 0.94);
+    box-shadow:
+      0 12px 40px rgba(0, 0, 0, 0.45),
+      0 0 32px rgba(201, 162, 77, 0.12);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  .service-card:hover .service-card-glow,
+  .experience-card:hover .experience-card-glow,
+  .education-card:hover .education-card-glow {
+    opacity: 1;
+  }
+
+  .service-card:hover .service-icon-tile,
+  .experience-card:hover .experience-icon-tile,
+  .education-card:hover .education-icon-tile {
+    background-color: var(--brass);
+    border-color: var(--brass);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 0 16px rgba(201, 162, 77, 0.40);
+  }
+
+  .service-card:hover .service-icon,
+  .experience-card:hover .experience-icon,
+  .education-card:hover .education-icon {
+    color: var(--canvas);
+  }
+
+  .service-card:hover .service-card-index {
+    color: rgba(201, 162, 77, 0.70);
+  }
+
+  .service-card:hover .service-card-content {
+    transform: translateY(-3px);
+  }
+
+  .service-card:hover .service-card-title,
+  .experience-card:hover .experience-card-title,
+  .education-card:hover .education-card-title {
+    color: #ffffff;
+  }
+
+  .service-card:hover .service-chip {
+    border-color: rgba(40, 51, 42, 0.9);
+    color: rgba(239, 234, 220, 0.88);
+  }
+
+  .service-chip:hover {
+    border-color: var(--brass) !important;
+    color: #ffffff !important;
+    background-color: rgba(201, 162, 77, 0.12) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 2px 8px rgba(201, 162, 77, 0.18);
+  }
+}
+
 /* Reduced motion overrides */
 @media (prefers-reduced-motion: reduce) {
   html {
