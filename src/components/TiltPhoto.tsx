@@ -217,7 +217,7 @@ export default function TiltPhoto({
 
       {/* 4. Aman cutout with gentle floating motion & bottom fade */}
       <div className="hero-cutout-float relative z-10 w-full h-full flex items-end justify-center pointer-events-none">
-        <div className="hero-cutout-mask relative w-full h-[95%] max-w-[440px]">
+        <div className="hero-cutout-mask relative w-full h-full max-w-[440px] -translate-y-7 sm:-translate-y-9 lg:-translate-y-11">
           <Image
             src={src}
             alt={alt}

@@ -636,8 +636,8 @@ p {
 }
 
 .hero-cutout-mask {
-  -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent 98%);
-  mask-image: linear-gradient(to bottom, #000 78%, transparent 98%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 68%, transparent 94%);
+  mask-image: linear-gradient(to bottom, #000 68%, transparent 94%);
 }
 
 .hero-chip-bob {
