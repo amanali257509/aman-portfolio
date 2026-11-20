@@ -82,8 +82,8 @@ function ProjectCard({
         </div>
       </div>
 
-      {/* 2. Card Body: Aspect ~3:4 preview */}
-      <div className="relative aspect-[3/4] w-full overflow-hidden bg-canvas">
+      {/* 2. Card Body: Taller preview so at least half of the page is visible */}
+      <div className="relative aspect-[3/4.6] w-full overflow-hidden bg-canvas">
         {project.video ? (
           <video
             src={project.video}
@@ -472,7 +472,7 @@ export function Projects() {
         ) : (
           /* Normal: 3-Column Infinite Looping Auto-Scroll */
           <div
-            className={`project-fade-mask relative h-[clamp(520px,78vh,760px)] max-[899px]:h-[clamp(480px,70vh,640px)] w-full overflow-hidden transition-all duration-200 ${
+            className={`project-fade-mask relative h-[clamp(650px,88vh,940px)] max-[899px]:h-[clamp(560px,80vh,780px)] w-full overflow-hidden transition-all duration-200 ${
               isFading ? 'opacity-0 scale-[0.99]' : 'opacity-100 scale-100'
             }`}
           >
