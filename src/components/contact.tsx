@@ -55,8 +55,8 @@ export function Contact() {
     setResponseMessage('')
 
     try {
-      // 1. Direct submission to FormSubmit for amanali257509@gmail.com
-      const res = await fetch('https://formsubmit.co/ajax/amanali257509@gmail.com', {
+      // 1. Direct submission to FormSubmit using secure endpoint token
+      const res = await fetch('https://formsubmit.co/ajax/7b9da346f0c66eaea6edcda2c9a579c0', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
