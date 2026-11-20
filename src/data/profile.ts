@@ -9,7 +9,7 @@ export interface ProfileData {
   links: {
     github: string
     linkedin: string
-    fiverr: string
+    upwork: string
     cv: string
   }
   hero: {
@@ -38,7 +38,7 @@ export const profile: ProfileData = {
   links: {
     github: 'https://github.com/amanali257509',
     linkedin: 'https://www.linkedin.com/in/aman-ali-dev/',
-    fiverr: 'https://www.fiverr.com/sellers/amanali414/',
+    upwork: 'https://www.upwork.com/freelancers/~0177e670a26f028318?mp_source=share',
     cv: '/Aman_Ali_CV.pdf',
   },
   hero: {

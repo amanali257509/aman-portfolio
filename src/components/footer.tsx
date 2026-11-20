@@ -48,12 +48,12 @@ export function Footer() {
             LinkedIn
           </a>
           <a
-            href={profile.links.fiverr}
+            href={profile.links.upwork}
             target="_blank"
             rel="noopener noreferrer"
             className="text-muted hover:text-brass link-underline transition-colors"
           >
-            Fiverr
+            Upwork
           </a>
           <a
             href={`mailto:${profile.email}`}

@@ -17,7 +17,7 @@ export function JsonLd() {
     sameAs: [
       profile.links.github,
       profile.links.linkedin,
-      profile.links.fiverr,
+      profile.links.upwork,
     ],
     knowsAbout: [
       'WordPress',

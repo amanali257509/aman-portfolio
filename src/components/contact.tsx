@@ -210,12 +210,12 @@ export function Contact() {
                     GitHub
                   </a>
                   <a
-                    href={profile.links.fiverr}
+                    href={profile.links.upwork}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-muted hover:text-brass link-underline transition-colors"
                   >
-                    Fiverr
+                    Upwork
                   </a>
                 </div>
               </div>
