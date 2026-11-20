@@ -75,9 +75,11 @@ export function Hero() {
               <a
                 href={profile.links.cv}
                 download="Aman_Ali_CV.pdf"
-                className="btn-secondary"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-secondary group/btn"
               >
-                <Download className="w-4 h-4 text-muted" strokeWidth={1.75} />
+                <Download className="w-4 h-4 text-brass transition-transform duration-200 group-hover/btn:-translate-y-0.5" strokeWidth={2} />
                 <span>{profile.hero.secondaryCta}</span>
               </a>
             </div>
