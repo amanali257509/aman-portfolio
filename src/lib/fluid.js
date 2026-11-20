@@ -7,15 +7,15 @@ export function initFluid(canvas, options = {}) {
   const cfg = {
     SIM_RES: 128,
     DYE_RES: 960,
-    DENSITY_DISSIPATION: 1.6, // smoke dissipates gracefully and cleanly so it doesn't build a thick opaque fog
-    VELOCITY_DISSIPATION: 1.2,
+    DENSITY_DISSIPATION: 1.05, // lingering golden trails with smooth dissipation
+    VELOCITY_DISSIPATION: 1.0,
     PRESSURE: 0.8,
     PRESSURE_ITER: 20,
-    CURL: 24, // gentle, refined swirliness
-    SPLAT_RADIUS: 0.28, // refined, soft smoke trail
-    SPLAT_FORCE: 5000,
-    INTENSITY: 0.35, // elegant, translucent gold dye that preserves full text readability
-    colors: ['#c9a24d', '#b38b37', '#8f6a22', '#634714'],
+    CURL: 28, // Billowing, energetic fluid swirls
+    SPLAT_RADIUS: 0.35, // Clear, substantial smoke trail
+    SPLAT_FORCE: 5500,
+    INTENSITY: 0.70, // Rich, vibrant gold dye for strong visual presence
+    colors: ['#c9a24d', '#e0b853', '#d4a838', '#9e7520'],
     ...options,
   }
 
@@ -136,18 +136,17 @@ export function initFluid(canvas, options = {}) {
       void main(){
         vec3 c = texture(uTexture, vUv).rgb;
         float len = length(c);
-        if (len < 0.001) {
+        if (len < 0.0005) {
           o = vec4(0.0);
           return;
         }
-        // Normalize chromaticity to strictly retain rich warm brass/gold hue (#c9a24d)
+        // Preserve rich vibrant warm gold / brass tone
         vec3 hue = c / (len + 0.0001);
-        vec3 gold = mix(hue, vec3(0.79, 0.63, 0.30), 0.5);
-        // Gentle smooth saturation curve
-        float curve = 1.0 - exp(-len * 1.6);
-        vec3 rgb = gold * curve * 0.8;
-        // Keep maximum alpha subtle and translucent (capped at 0.30) so text & content are always 100% crisp and readable
-        float a = clamp(curve * 0.30, 0.0, 0.30);
+        vec3 gold = mix(hue, vec3(0.85, 0.69, 0.32), 0.55);
+        float curve = 1.0 - exp(-len * 2.2);
+        vec3 rgb = gold * (0.95 + 0.2 * curve);
+        // Alpha up to 0.62 so the smoke is clearly visible and vivid on the dark background
+        float a = clamp(curve * 0.62, 0.0, 0.65);
         o = vec4(rgb * a, a);
       }`,
   }
@@ -428,8 +427,8 @@ export function initFluid(canvas, options = {}) {
       ptr.lastX = x
       ptr.lastY = y
       ptr.has = true
-      // Trigger a soft gentle swirl immediately upon entering
-      splat(x, y, (Math.random() - 0.5) * 300, (Math.random() - 0.5) * 300, pick())
+      // Trigger a rich golden swirl upon entering
+      splat(x, y, (Math.random() - 0.5) * 500, (Math.random() - 0.5) * 500, pick())
     } else {
       ptr.dx += x - ptr.lastX
       ptr.dy += y - ptr.lastY
@@ -449,13 +448,13 @@ export function initFluid(canvas, options = {}) {
   window.addEventListener('resize', resize, { passive: true })
   document.addEventListener('mouseleave', onLeave, { passive: true })
 
-  // Splat 2 very soft gentle whispers on load so the effect is alive without obscuring text
-  for (let i = 0; i < 2; i++) {
+  // Splat 3 soft bursts on load so the effect is immediately visible
+  for (let i = 0; i < 3; i++) {
     splat(
+      0.25 + i * 0.25,
       0.35 + Math.random() * 0.3,
-      0.45 + Math.random() * 0.2,
-      (Math.random() - 0.5) * 400,
-      (Math.random() - 0.5) * 400,
+      (Math.random() - 0.5) * 600,
+      (Math.random() - 0.5) * 600,
       pick()
     )
   }
@@ -498,7 +497,7 @@ export function initFluid(canvas, options = {}) {
       const dist = Math.hypot(dx, dy)
       if (dist > 0.00005) {
         // Guarantee enough impulse so even slow pointer drifts produce elegant smoke
-        const force = Math.max(dist * cfg.SPLAT_FORCE, 600)
+        const force = Math.max(dist * cfg.SPLAT_FORCE, 900)
         const fx = (dx / (dist || 1)) * force
         const fy = (dy / (dist || 1)) * force
         splat(ptr.x, ptr.y, fx, fy, pick())

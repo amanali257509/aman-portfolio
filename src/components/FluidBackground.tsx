@@ -8,7 +8,7 @@ interface FluidBackgroundProps {
   className?: string
 }
 
-const DEFAULT_SMOKE_COLORS = ['#c9a24d', '#b38b37', '#8f6a22', '#634714']
+const DEFAULT_SMOKE_COLORS = ['#c9a24d', '#e0b853', '#d4a838', '#9e7520']
 
 /**
  * Fixed-positioned canvas running WebGL2 Navier-Stokes fluid simulation.
