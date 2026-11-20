@@ -3,6 +3,7 @@ import { Urbanist, Poppins } from 'next/font/google'
 import './globals.css'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
+import { FloatingWhatsApp } from '@/components/floating-whatsapp'
 import { JsonLd } from '@/components/json-ld'
 import FluidBackground from '@/components/FluidBackground'
 
@@ -96,6 +97,8 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        {/* Floating WhatsApp Support Button */}
+        <FloatingWhatsApp />
       </body>
     </html>
   )
