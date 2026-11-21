@@ -5,10 +5,50 @@ import { Check, Copy } from 'lucide-react'
 import { profile } from '@/data/profile'
 import { Reveal } from './reveal'
 
+const COUNTRY_CODES = [
+  { code: '+92', label: '🇵🇰 +92 (Pakistan)' },
+  { code: '+1', label: '🇺🇸 / 🇨🇦 +1 (US / Canada)' },
+  { code: '+44', label: '🇬🇧 +44 (UK)' },
+  { code: '+971', label: '🇦🇪 +971 (UAE)' },
+  { code: '+966', label: '🇸🇦 +966 (Saudi Arabia)' },
+  { code: '+974', label: '🇶🇦 +974 (Qatar)' },
+  { code: '+968', label: '🇴🇲 +968 (Oman)' },
+  { code: '+965', label: '🇰🇼 +965 (Kuwait)' },
+  { code: '+973', label: '🇧🇭 +973 (Bahrain)' },
+  { code: '+61', label: '🇦🇺 +61 (Australia)' },
+  { code: '+49', label: '🇩🇪 +49 (Germany)' },
+  { code: '+33', label: '🇫🇷 +33 (France)' },
+  { code: '+31', label: '🇳🇱 +31 (Netherlands)' },
+  { code: '+41', label: '🇨🇭 +41 (Switzerland)' },
+  { code: '+46', label: '🇸🇪 +46 (Sweden)' },
+  { code: '+47', label: '🇳🇴 +47 (Norway)' },
+  { code: '+45', label: '🇩🇰 +45 (Denmark)' },
+  { code: '+353', label: '🇮🇪 +353 (Ireland)' },
+  { code: '+39', label: '🇮🇹 +39 (Italy)' },
+  { code: '+34', label: '🇪🇸 +34 (Spain)' },
+  { code: '+65', label: '🇸🇬 +65 (Singapore)' },
+  { code: '+60', label: '🇲🇾 +60 (Malaysia)' },
+  { code: '+91', label: '🇮🇳 +91 (India)' },
+  { code: '+880', label: '🇧🇩 +880 (Bangladesh)' },
+  { code: '+94', label: '🇱🇰 +94 (Sri Lanka)' },
+  { code: '+27', label: '🇿🇦 +27 (South Africa)' },
+  { code: '+234', label: '🇳🇬 +234 (Nigeria)' },
+  { code: '+20', label: '🇪🇬 +20 (Egypt)' },
+  { code: '+90', label: '🇹🇷 +90 (Turkey)' },
+  { code: '+55', label: '🇧🇷 +55 (Brazil)' },
+  { code: '+52', label: '🇲🇽 +52 (Mexico)' },
+  { code: '+81', label: '🇯🇵 +81 (Japan)' },
+  { code: '+82', label: '🇰🇷 +82 (South Korea)' },
+  { code: '+86', label: '🇨🇳 +86 (China)' },
+  { code: '+64', label: '🇳🇿 +64 (New Zealand)' },
+]
+
 export function Contact() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    countryCode: '+92',
+    phone: '',
     topic: 'AI automation and workflows',
     message: '',
     company: '', // Honeypot field
@@ -38,6 +78,12 @@ export function Contact() {
     if (!formData.email.trim() || !emailRegex.test(formData.email.trim())) {
       errs.email = 'Please enter a valid email address.'
     }
+    if (formData.phone.trim()) {
+      const digitsOnly = formData.phone.replace(/\D/g, '')
+      if (digitsOnly.length < 6 || digitsOnly.length > 15) {
+        errs.phone = 'Please enter a valid phone number (6 to 15 digits).'
+      }
+    }
     if (!formData.message.trim() || formData.message.trim().length < 10) {
       errs.message = 'Please write a message with at least 10 characters.'
     } else if (formData.message.length > 2000) {
@@ -54,6 +100,10 @@ export function Contact() {
     setStatus('loading')
     setResponseMessage('')
 
+    const fullPhone = formData.phone.trim()
+      ? `${formData.countryCode} ${formData.phone.trim()}`
+      : 'Not provided'
+
     try {
       // 1. Direct submission to FormSubmit using secure endpoint token
       const res = await fetch('https://formsubmit.co/ajax/7b9da346f0c66eaea6edcda2c9a579c0', {
@@ -65,6 +115,7 @@ export function Contact() {
         body: JSON.stringify({
           Name: formData.name.trim(),
           Email: formData.email.trim(),
+          Phone: fullPhone,
           Topic: formData.topic,
           Message: formData.message.trim(),
           _subject: `New Lead: ${formData.name.trim()} - ${formData.topic}`,
@@ -81,6 +132,8 @@ export function Contact() {
         setFormData({
           name: '',
           email: '',
+          countryCode: '+92',
+          phone: '',
           topic: 'AI automation and workflows',
           message: '',
           company: '',
@@ -98,6 +151,8 @@ export function Contact() {
         setFormData({
           name: '',
           email: '',
+          countryCode: '+92',
+          phone: '',
           topic: 'AI automation and workflows',
           message: '',
           company: '',
@@ -112,6 +167,7 @@ export function Contact() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
+          phone: fullPhone,
           mountedAt,
           submittedAt: Date.now(),
         }),
@@ -124,6 +180,8 @@ export function Contact() {
         setFormData({
           name: '',
           email: '',
+          countryCode: '+92',
+          phone: '',
           topic: 'AI automation and workflows',
           message: '',
           company: '',
@@ -292,6 +350,53 @@ export function Contact() {
                   {errors.email && (
                     <p id="contact-email-error" className="mt-1.5 text-[13px] text-red-400">
                       {errors.email}
+                    </p>
+                  )}
+                </div>
+
+                {/* Phone / WhatsApp Number with Country Code */}
+                <div>
+                  <label htmlFor="contact-phone" className="block text-[14px] font-normal text-ink mb-2">
+                    Phone / WhatsApp Number
+                  </label>
+                  <div className="flex gap-2">
+                    {/* Country Code Selector */}
+                    <div className="w-[130px] sm:w-[160px] shrink-0">
+                      <select
+                        id="contact-country-code"
+                        aria-label="Country dial code"
+                        value={formData.countryCode}
+                        onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
+                        className="w-full min-h-[44px] px-2.5 sm:px-3 rounded-[8px] border border-line bg-canvas text-[13.5px] sm:text-[14.5px] text-ink focus:border-brass transition-colors cursor-pointer"
+                      >
+                        {COUNTRY_CODES.map((c, i) => (
+                          <option key={`${c.code}-${i}`} value={c.code} className="bg-[#0f1410] text-ink py-1">
+                            {c.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Phone Input */}
+                    <div className="flex-1 min-w-0">
+                      <input
+                        id="contact-phone"
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => {
+                          setFormData({ ...formData, phone: e.target.value })
+                          if (errors.phone) setErrors({ ...errors, phone: '' })
+                        }}
+                        placeholder="300 1234567"
+                        className="w-full min-h-[44px] px-4 rounded-[8px] border border-line bg-canvas text-[15px] text-ink placeholder:text-muted/60 focus:border-brass transition-colors"
+                        aria-invalid={!!errors.phone}
+                        aria-describedby={errors.phone ? 'contact-phone-error' : undefined}
+                      />
+                    </div>
+                  </div>
+                  {errors.phone && (
+                    <p id="contact-phone-error" className="mt-1.5 text-[13px] text-red-400">
+                      {errors.phone}
                     </p>
                   )}
                 </div>

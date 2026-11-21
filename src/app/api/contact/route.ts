@@ -4,6 +4,7 @@ import { Resend } from 'resend'
 interface ContactPayload {
   name?: string
   email?: string
+  phone?: string
   topic?: string
   message?: string
   company?: string // Honeypot field
@@ -16,7 +17,7 @@ const RECIPIENT_EMAIL = 'amanali257509@gmail.com'
 export async function POST(req: NextRequest) {
   try {
     const body: ContactPayload = await req.json()
-    const { name, email, topic, message, company, mountedAt, submittedAt } = body
+    const { name, email, phone, topic, message, company, mountedAt, submittedAt } = body
 
     // 1. Honeypot check (must stay empty)
     if (company && company.trim().length > 0) {
@@ -82,7 +83,7 @@ export async function POST(req: NextRequest) {
       to: RECIPIENT_EMAIL,
       replyTo: email.trim(),
       subject: `New Lead: ${name.trim()} (${topic || 'General'})`,
-      text: `New contact form submission from your portfolio website:\n\nName: ${name.trim()}\nEmail: ${email.trim()}\nTopic: ${topic || 'General'}\n\nMessage:\n${message.trim()}\n\n---\nSent from aman-ali.vercel.app`,
+      text: `New contact form submission from your portfolio website:\n\nName: ${name.trim()}\nEmail: ${email.trim()}\nPhone: ${phone && phone.trim() ? phone.trim() : 'Not provided'}\nTopic: ${topic || 'General'}\n\nMessage:\n${message.trim()}\n\n---\nSent from aman-ali.vercel.app`,
     })
 
     if (error) {
