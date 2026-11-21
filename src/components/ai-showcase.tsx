@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { automationItems } from '@/data/automation'
 import { Reveal } from './reveal'
 import { ChevronLeft, ChevronRight, Maximize2, X, Play } from 'lucide-react'
@@ -8,12 +9,17 @@ import { ChevronLeft, ChevronRight, Maximize2, X, Play } from 'lucide-react'
 const AUTO_INTERVAL_MS = 5000
 
 export function AiShowcase() {
+  const [mounted, setMounted] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const [touchStartX, setTouchStartX] = useState<number | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const total = automationItems.length
 
@@ -285,19 +291,19 @@ export function AiShowcase() {
       </div>
 
       {/* Lightbox Modal */}
-      {lightboxIndex !== null && lightboxItem && (
+      {mounted && lightboxIndex !== null && lightboxItem && createPortal(
         <div
           role="dialog"
           aria-modal="true"
           aria-label={`${lightboxItem.title} video player`}
-          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 md:p-8 lightbox-animate-in"
+          className="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-md flex items-center justify-center pt-16 pb-4 px-3 sm:pt-20 sm:pb-6 sm:px-6 md:p-8 lightbox-animate-in"
           onClick={(e) => {
             if (e.target === e.currentTarget) {
               setLightboxIndex(null)
             }
           }}
         >
-          <div className="relative w-full max-w-5xl bg-surface border border-line rounded-[8px] overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
+          <div className="relative w-full max-w-5xl bg-surface border border-line rounded-[20px] overflow-hidden shadow-2xl flex flex-col max-h-[84vh] sm:max-h-[86vh] my-auto">
             {/* Modal Header */}
             <div className="flex items-center justify-between p-4 md:px-6 border-b border-line bg-surface shrink-0">
               <div className="flex items-center gap-3">
@@ -317,7 +323,7 @@ export function AiShowcase() {
                 type="button"
                 onClick={() => setLightboxIndex(null)}
                 aria-label="Close video lightbox"
-                className="w-10 h-10 rounded-[8px] border border-line bg-canvas text-ink hover:text-brass hover:border-brass flex items-center justify-center transition-colors cursor-pointer"
+                className="w-10 h-10 rounded-[8px] border border-line bg-canvas text-ink hover:text-brass hover:border-brass flex items-center justify-center transition-colors cursor-pointer shrink-0"
               >
                 <X className="w-5 h-5" aria-hidden="true" />
               </button>
@@ -379,7 +385,8 @@ export function AiShowcase() {
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </section>
   )

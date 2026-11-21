@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { ArrowRight, Download, FileText, X, ExternalLink } from 'lucide-react'
 import { profile } from '@/data/profile'
 import TiltPhoto from './TiltPhoto'
@@ -137,16 +138,16 @@ export function Hero() {
       </div>
 
       {/* CV PDF Lightbox / Modal */}
-      {cvModalOpen && (
+      {mounted && cvModalOpen && createPortal(
         <div
           role="dialog"
           aria-modal="true"
           aria-label="Aman Ali CV Preview"
-          className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-5 md:p-8 bg-black/85 backdrop-blur-md animate-in fade-in duration-200"
+          className="fixed inset-0 z-[9999] flex items-center justify-center pt-16 pb-4 px-3 sm:pt-20 sm:pb-6 sm:px-6 md:p-8 bg-black/90 backdrop-blur-md animate-in fade-in duration-200"
           onClick={() => setCvModalOpen(false)}
         >
           <div
-            className="relative flex flex-col w-full max-w-4xl h-[90vh] rounded-[20px] border border-line bg-surface shadow-[0_25px_65px_rgba(0,0,0,0.85)] overflow-hidden"
+            className="relative flex flex-col w-full max-w-4xl h-[84vh] sm:h-[86vh] my-auto rounded-[20px] border border-line bg-surface shadow-[0_25px_65px_rgba(0,0,0,0.85)] overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
@@ -198,7 +199,7 @@ export function Hero() {
                   type="button"
                   onClick={() => setCvModalOpen(false)}
                   aria-label="Close CV preview"
-                  className="p-1.5 sm:p-2 rounded-lg text-muted hover:text-ink hover:bg-canvas/60 border border-line transition-colors ml-1 cursor-pointer"
+                  className="min-h-[38px] min-w-[38px] flex items-center justify-center rounded-lg text-ink bg-surface border border-line hover:border-brass hover:text-brass hover:bg-canvas/80 transition-colors ml-1 cursor-pointer shrink-0"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -214,7 +215,8 @@ export function Hero() {
               />
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </section>
   )

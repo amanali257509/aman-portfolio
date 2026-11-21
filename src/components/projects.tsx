@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import {
   ArrowUpRight,
   X,
@@ -236,6 +237,7 @@ function ScrollingColumn({
  * Main Projects Section
  */
 export function Projects() {
+  const [mounted, setMounted] = useState(false)
   const [activeCategory, setActiveCategory] = useState<ProjectCategory>('All')
   const [isFading, setIsFading] = useState(false)
   const [isSectionVisible, setIsSectionVisible] = useState(true)
@@ -246,6 +248,10 @@ export function Projects() {
 
   const sectionRef = useRef<HTMLElement>(null)
   const modalScrollRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Detect Touch / Reduced Motion
   useEffect(() => {
@@ -512,16 +518,16 @@ export function Projects() {
       </div>
 
       {/* Full-Screen Image Lightbox Modal */}
-      {activeProject && (
+      {mounted && activeProject && createPortal(
         <div
           role="dialog"
           aria-modal="true"
           aria-label={`${activeProject.title} project preview`}
-          className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-5 md:p-8 bg-black/85 backdrop-blur-md animate-in fade-in duration-200"
+          className="fixed inset-0 z-[9999] flex items-center justify-center pt-16 pb-4 px-3 sm:pt-20 sm:pb-6 sm:px-6 md:p-8 bg-black/90 backdrop-blur-md animate-in fade-in duration-200"
           onClick={() => setActiveProject(null)}
         >
           <div
-            className="relative flex flex-col w-full max-w-5xl max-h-[92vh] rounded-[20px] border border-line bg-surface shadow-[0_25px_65px_rgba(0,0,0,0.85)] overflow-hidden"
+            className="relative flex flex-col w-full max-w-5xl max-h-[84vh] sm:max-h-[86vh] my-auto rounded-[20px] border border-line bg-surface shadow-[0_25px_65px_rgba(0,0,0,0.85)] overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* 1. Modal Header Bar */}
@@ -581,7 +587,7 @@ export function Projects() {
                   type="button"
                   onClick={() => setActiveProject(null)}
                   aria-label="Close modal"
-                  className="p-1.5 sm:p-2 rounded-lg text-muted hover:text-ink hover:bg-canvas/60 border border-line transition-colors ml-1"
+                  className="min-h-[38px] min-w-[38px] flex items-center justify-center rounded-lg text-ink bg-surface border border-line hover:border-brass hover:text-brass hover:bg-canvas/80 transition-colors ml-1 cursor-pointer shrink-0"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -656,7 +662,8 @@ export function Projects() {
               <ChevronRight className="w-5 h-5" />
             </button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </section>
   )
