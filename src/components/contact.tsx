@@ -1,49 +1,87 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { Check, Copy } from 'lucide-react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
+import { Check, Copy, Search, ChevronDown, X } from 'lucide-react'
 import { profile } from '@/data/profile'
 import { Reveal } from './reveal'
 
-const COUNTRY_CODES = [
-  { code: '+92', label: '🇵🇰 +92 (Pakistan)' },
-  { code: '+1', label: '🇺🇸 / 🇨🇦 +1 (US / Canada)' },
-  { code: '+44', label: '🇬🇧 +44 (UK)' },
-  { code: '+971', label: '🇦🇪 +971 (UAE)' },
-  { code: '+966', label: '🇸🇦 +966 (Saudi Arabia)' },
-  { code: '+974', label: '🇶🇦 +974 (Qatar)' },
-  { code: '+968', label: '🇴🇲 +968 (Oman)' },
-  { code: '+965', label: '🇰🇼 +965 (Kuwait)' },
-  { code: '+973', label: '🇧🇭 +973 (Bahrain)' },
-  { code: '+61', label: '🇦🇺 +61 (Australia)' },
-  { code: '+49', label: '🇩🇪 +49 (Germany)' },
-  { code: '+33', label: '🇫🇷 +33 (France)' },
-  { code: '+31', label: '🇳🇱 +31 (Netherlands)' },
-  { code: '+41', label: '🇨🇭 +41 (Switzerland)' },
-  { code: '+46', label: '🇸🇪 +46 (Sweden)' },
-  { code: '+47', label: '🇳🇴 +47 (Norway)' },
-  { code: '+45', label: '🇩🇰 +45 (Denmark)' },
-  { code: '+353', label: '🇮🇪 +353 (Ireland)' },
-  { code: '+39', label: '🇮🇹 +39 (Italy)' },
-  { code: '+34', label: '🇪🇸 +34 (Spain)' },
-  { code: '+65', label: '🇸🇬 +65 (Singapore)' },
-  { code: '+60', label: '🇲🇾 +60 (Malaysia)' },
-  { code: '+91', label: '🇮🇳 +91 (India)' },
-  { code: '+880', label: '🇧🇩 +880 (Bangladesh)' },
-  { code: '+94', label: '🇱🇰 +94 (Sri Lanka)' },
-  { code: '+27', label: '🇿🇦 +27 (South Africa)' },
-  { code: '+234', label: '🇳🇬 +234 (Nigeria)' },
-  { code: '+20', label: '🇪🇬 +20 (Egypt)' },
-  { code: '+90', label: '🇹🇷 +90 (Turkey)' },
-  { code: '+55', label: '🇧🇷 +55 (Brazil)' },
-  { code: '+52', label: '🇲🇽 +52 (Mexico)' },
-  { code: '+81', label: '🇯🇵 +81 (Japan)' },
-  { code: '+82', label: '🇰🇷 +82 (South Korea)' },
-  { code: '+86', label: '🇨🇳 +86 (China)' },
-  { code: '+64', label: '🇳🇿 +64 (New Zealand)' },
+interface CountryItem {
+  name: string
+  code: string
+  iso: string
+}
+
+const COUNTRIES: CountryItem[] = [
+  { name: 'Pakistan', code: '+92', iso: 'pk' },
+  { name: 'United States', code: '+1', iso: 'us' },
+  { name: 'United Kingdom', code: '+44', iso: 'gb' },
+  { name: 'Canada', code: '+1', iso: 'ca' },
+  { name: 'Australia', code: '+61', iso: 'au' },
+  { name: 'United Arab Emirates', code: '+971', iso: 'ae' },
+  { name: 'Saudi Arabia', code: '+966', iso: 'sa' },
+  { name: 'Germany', code: '+49', iso: 'de' },
+  { name: 'Qatar', code: '+974', iso: 'qa' },
+  { name: 'Oman', code: '+968', iso: 'om' },
+  { name: 'Kuwait', code: '+965', iso: 'kw' },
+  { name: 'Bahrain', code: '+973', iso: 'bh' },
+  { name: 'India', code: '+91', iso: 'in' },
+  { name: 'Singapore', code: '+65', iso: 'sg' },
+  { name: 'Malaysia', code: '+60', iso: 'my' },
+  { name: 'France', code: '+33', iso: 'fr' },
+  { name: 'Netherlands', code: '+31', iso: 'nl' },
+  { name: 'Switzerland', code: '+41', iso: 'ch' },
+  { name: 'Sweden', code: '+46', iso: 'se' },
+  { name: 'Norway', code: '+47', iso: 'no' },
+  { name: 'Denmark', code: '+45', iso: 'dk' },
+  { name: 'Ireland', code: '+353', iso: 'ie' },
+  { name: 'Italy', code: '+39', iso: 'it' },
+  { name: 'Spain', code: '+34', iso: 'es' },
+  { name: 'New Zealand', code: '+64', iso: 'nz' },
+  { name: 'South Africa', code: '+27', iso: 'za' },
+  { name: 'Turkey', code: '+90', iso: 'tr' },
+  { name: 'Egypt', code: '+20', iso: 'eg' },
+  { name: 'Bangladesh', code: '+880', iso: 'bd' },
+  { name: 'Sri Lanka', code: '+94', iso: 'lk' },
+  { name: 'Nigeria', code: '+234', iso: 'ng' },
+  { name: 'Kenya', code: '+254', iso: 'ke' },
+  { name: 'Brazil', code: '+55', iso: 'br' },
+  { name: 'Mexico', code: '+52', iso: 'mx' },
+  { name: 'Japan', code: '+81', iso: 'jp' },
+  { name: 'South Korea', code: '+82', iso: 'kr' },
+  { name: 'China', code: '+86', iso: 'cn' },
+  { name: 'Hong Kong', code: '+852', iso: 'hk' },
+  { name: 'Indonesia', code: '+62', iso: 'id' },
+  { name: 'Philippines', code: '+63', iso: 'ph' },
+  { name: 'Thailand', code: '+66', iso: 'th' },
+  { name: 'Vietnam', code: '+84', iso: 'vn' },
+  { name: 'Belgium', code: '+32', iso: 'be' },
+  { name: 'Austria', code: '+43', iso: 'at' },
+  { name: 'Poland', code: '+48', iso: 'pl' },
+  { name: 'Portugal', code: '+351', iso: 'pt' },
+  { name: 'Greece', code: '+30', iso: 'gr' },
+  { name: 'Czech Republic', code: '+420', iso: 'cz' },
+  { name: 'Hungary', code: '+36', iso: 'hu' },
+  { name: 'Romania', code: '+40', iso: 'ro' },
+  { name: 'Finland', code: '+358', iso: 'fi' },
+  { name: 'Argentina', code: '+54', iso: 'ar' },
+  { name: 'Colombia', code: '+57', iso: 'co' },
+  { name: 'Chile', code: '+56', iso: 'cl' },
+  { name: 'Jordan', code: '+962', iso: 'jo' },
+  { name: 'Lebanon', code: '+961', iso: 'lb' },
+  { name: 'Iraq', code: '+964', iso: 'iq' },
+  { name: 'Morocco', code: '+212', iso: 'ma' },
+  { name: 'Ghana', code: '+233', iso: 'gh' },
+  { name: 'Nepal', code: '+977', iso: 'np' },
 ]
 
 export function Contact() {
+  const [selectedCountry, setSelectedCountry] = useState<CountryItem>(COUNTRIES[0])
+  const [isCountryOpen, setIsCountryOpen] = useState(false)
+  const [countrySearch, setCountrySearch] = useState('')
+  const countryDropdownRef = useRef<HTMLDivElement>(null)
+  const countrySearchInputRef = useRef<HTMLInputElement>(null)
+  const phoneInputRef = useRef<HTMLInputElement>(null)
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -62,6 +100,44 @@ export function Contact() {
   useEffect(() => {
     setMountedAt(Date.now())
   }, [])
+
+  // Filter countries by search query
+  const filteredCountries = useMemo(() => {
+    if (!countrySearch.trim()) return COUNTRIES
+    const q = countrySearch.trim().toLowerCase()
+    return COUNTRIES.filter(
+      (c) =>
+        c.name.toLowerCase().includes(q) ||
+        c.code.toLowerCase().includes(q) ||
+        c.iso.toLowerCase().includes(q)
+    )
+  }, [countrySearch])
+
+  // Handle click outside and ESC key to close country dropdown
+  useEffect(() => {
+    if (!isCountryOpen) return
+
+    setTimeout(() => {
+      countrySearchInputRef.current?.focus()
+    }, 50)
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (countryDropdownRef.current && !countryDropdownRef.current.contains(e.target as Node)) {
+        setIsCountryOpen(false)
+      }
+    }
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsCountryOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isCountryOpen])
 
   const copyEmail = () => {
     navigator.clipboard.writeText(profile.email)
@@ -101,7 +177,7 @@ export function Contact() {
     setResponseMessage('')
 
     const fullPhone = formData.phone.trim()
-      ? `${formData.countryCode} ${formData.phone.trim()}`
+      ? `${selectedCountry.code} ${formData.phone.trim()}`
       : 'Not provided'
 
     try {
@@ -138,6 +214,9 @@ export function Contact() {
           message: '',
           company: '',
         })
+        setSelectedCountry(COUNTRIES[0])
+        setIsCountryOpen(false)
+        setCountrySearch('')
         setErrors({})
         return
       }
@@ -157,6 +236,9 @@ export function Contact() {
           message: '',
           company: '',
         })
+        setSelectedCountry(COUNTRIES[0])
+        setIsCountryOpen(false)
+        setCountrySearch('')
         setErrors({})
         return
       }
@@ -186,6 +268,9 @@ export function Contact() {
           message: '',
           company: '',
         })
+        setSelectedCountry(COUNTRIES[0])
+        setIsCountryOpen(false)
+        setCountrySearch('')
         setErrors({})
         return
       }
@@ -354,32 +439,137 @@ export function Contact() {
                   )}
                 </div>
 
-                {/* Phone / WhatsApp Number with Country Code */}
+                {/* Phone / WhatsApp Number with Searchable Country Code */}
                 <div>
                   <label htmlFor="contact-phone" className="block text-[14px] font-normal text-ink mb-2">
                     Phone / WhatsApp Number
                   </label>
                   <div className="flex gap-2">
-                    {/* Country Code Selector */}
-                    <div className="w-[130px] sm:w-[160px] shrink-0">
-                      <select
-                        id="contact-country-code"
-                        aria-label="Country dial code"
-                        value={formData.countryCode}
-                        onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
-                        className="w-full min-h-[44px] px-2.5 sm:px-3 rounded-[8px] border border-line bg-canvas text-[13.5px] sm:text-[14.5px] text-ink focus:border-brass transition-colors cursor-pointer"
+                    {/* Custom Searchable Country Code Dropdown */}
+                    <div className="relative shrink-0" ref={countryDropdownRef}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsCountryOpen(!isCountryOpen)
+                          setCountrySearch('')
+                        }}
+                        aria-label={`Selected country: ${selectedCountry.name} (${selectedCountry.code}). Click to search and change country.`}
+                        aria-expanded={isCountryOpen}
+                        aria-haspopup="listbox"
+                        className="h-[46px] px-3 rounded-[8px] border border-line bg-canvas hover:border-brass/70 focus:border-brass focus-visible:outline-none transition-colors flex items-center gap-2 cursor-pointer select-none"
                       >
-                        {COUNTRY_CODES.map((c, i) => (
-                          <option key={`${c.code}-${i}`} value={c.code} className="bg-[#0f1410] text-ink py-1">
-                            {c.label}
-                          </option>
-                        ))}
-                      </select>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={`https://flagcdn.com/w40/${selectedCountry.iso}.png`}
+                          srcSet={`https://flagcdn.com/w80/${selectedCountry.iso}.png 2x`}
+                          width="22"
+                          height="15"
+                          alt={`${selectedCountry.name} flag`}
+                          className="w-[22px] h-[15px] rounded-[2px] object-cover shadow-sm shrink-0"
+                          loading="eager"
+                        />
+                        <span className="font-mono text-[14px] text-ink font-medium tracking-tight">
+                          {selectedCountry.code}
+                        </span>
+                        <ChevronDown
+                          className={`w-3.5 h-3.5 text-muted transition-transform duration-200 shrink-0 ${
+                            isCountryOpen ? 'rotate-180 text-brass' : ''
+                          }`}
+                        />
+                      </button>
+
+                      {/* Popover Dropdown with Search */}
+                      {isCountryOpen && (
+                        <div
+                          role="listbox"
+                          aria-label="Country selection list"
+                          className="absolute top-full left-0 mt-1.5 w-[290px] sm:w-[330px] max-w-[calc(100vw-3rem)] rounded-[12px] border border-line bg-[#121813] shadow-[0_20px_50px_rgba(0,0,0,0.92)] z-50 overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150"
+                        >
+                          {/* Search Header */}
+                          <div className="p-2.5 border-b border-line/60 bg-[#0f1410]">
+                            <div className="relative flex items-center">
+                              <Search className="w-3.5 h-3.5 text-muted absolute left-3 pointer-events-none" />
+                              <input
+                                ref={countrySearchInputRef}
+                                type="text"
+                                value={countrySearch}
+                                onChange={(e) => setCountrySearch(e.target.value)}
+                                placeholder="Search country or code..."
+                                className="w-full h-9 pl-9 pr-8 rounded-[6px] border border-line/80 bg-canvas text-[13px] text-ink placeholder:text-muted/60 focus:border-brass focus:outline-none transition-colors"
+                              />
+                              {countrySearch && (
+                                <button
+                                  type="button"
+                                  onClick={() => setCountrySearch('')}
+                                  aria-label="Clear search"
+                                  className="absolute right-2 p-1 text-muted hover:text-ink transition-colors cursor-pointer"
+                                >
+                                  <X className="w-3 h-3" />
+                                </button>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Country Options List */}
+                          <div className="max-h-[250px] overflow-y-auto scrollbar-thin scrollbar-thumb-line scrollbar-track-transparent py-1 select-none">
+                            {filteredCountries.length > 0 ? (
+                              filteredCountries.map((c) => {
+                                const isSelected =
+                                  selectedCountry.iso === c.iso && selectedCountry.code === c.code
+                                return (
+                                  <button
+                                    key={`${c.iso}-${c.code}`}
+                                    type="button"
+                                    role="option"
+                                    aria-selected={isSelected}
+                                    onClick={() => {
+                                      setSelectedCountry(c)
+                                      setFormData((prev) => ({
+                                        ...prev,
+                                        countryCode: c.code,
+                                      }))
+                                      setIsCountryOpen(false)
+                                      setCountrySearch('')
+                                      phoneInputRef.current?.focus()
+                                    }}
+                                    className={`w-full flex items-center gap-3 px-3.5 py-2 text-left text-[13.5px] transition-colors cursor-pointer group ${
+                                      isSelected
+                                        ? 'bg-brass/10 text-brass font-medium'
+                                        : 'text-ink hover:bg-canvas/80 hover:text-brass'
+                                    }`}
+                                  >
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
+                                      src={`https://flagcdn.com/w40/${c.iso}.png`}
+                                      srcSet={`https://flagcdn.com/w80/${c.iso}.png 2x`}
+                                      width="20"
+                                      height="14"
+                                      alt=""
+                                      className="w-[20px] h-[14px] rounded-[2px] object-cover shrink-0 shadow-xs"
+                                      loading="lazy"
+                                    />
+                                    <span className="truncate flex-1">{c.name}</span>
+                                    <span className="font-mono text-[12.5px] text-muted group-hover:text-brass shrink-0">
+                                      {c.code}
+                                    </span>
+                                    {isSelected && <Check className="w-3.5 h-3.5 text-brass shrink-0" />}
+                                  </button>
+                                )
+                              })
+                            ) : (
+                              <div className="px-4 py-6 text-center text-[13px] text-muted">
+                                No country found for &ldquo;{countrySearch}&rdquo;
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     {/* Phone Input */}
                     <div className="flex-1 min-w-0">
                       <input
+                        ref={phoneInputRef}
                         id="contact-phone"
                         type="tel"
                         value={formData.phone}
@@ -388,7 +578,7 @@ export function Contact() {
                           if (errors.phone) setErrors({ ...errors, phone: '' })
                         }}
                         placeholder="300 1234567"
-                        className="w-full min-h-[44px] px-4 rounded-[8px] border border-line bg-canvas text-[15px] text-ink placeholder:text-muted/60 focus:border-brass transition-colors"
+                        className="w-full h-[46px] px-4 rounded-[8px] border border-line bg-canvas text-[15px] text-ink placeholder:text-muted/60 focus:border-brass transition-colors"
                         aria-invalid={!!errors.phone}
                         aria-describedby={errors.phone ? 'contact-phone-error' : undefined}
                       />
